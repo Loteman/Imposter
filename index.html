@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>המתחזה 🕵️</title>
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js" async></script>
+<style>
+  iconify-icon { display: inline-flex; vertical-align: middle; flex-shrink: 0; }
+  button iconify-icon, a iconify-icon { pointer-events: none; }
+  .btn iconify-icon          { font-size: 1.4rem; width: 1.4rem; height: 1.4rem; }
+  .footer-link iconify-icon  { font-size: 1rem;  width: 1rem;  height: 1rem;  }
+  .header-btn  iconify-icon  { font-size: 1rem;  width: 1rem;  height: 1rem;  }
+  .ri-icon iconify-icon      { font-size: 1.2rem; width: 1.2rem; height: 1.2rem; }
+  .info-tab iconify-icon     { font-size: 1rem;  width: 1rem;  height: 1rem;  }
+</style>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap');
+
+  :root {
+    --bg:       #0d0d14;
+    --surface:  #16161f;
+    --surface2: #1e1e2e;
+    --green:    #22c55e;
+    --red:      #ef4444;
+    --blue:     #38bdf8;
+    --yellow:   #facc15;
+    --purple:   #a855f7;
+    --text:     #f1f5f9;
+    --text-dim: #94a3b8;
+    --border:   #2d2d3d;
+    --radius:   18px;
+    --radius-sm:10px;
+    --header-h: 52px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; font-family: 'Heebo', sans-serif; background: var(--bg); color: var(--text); overflow: hidden; touch-action: manipulation; }
+
+  /* ===== GLOBAL HEADER ===== */
+  .page-header {
+    position: fixed; top: 0; left: 0; right: 0; height: var(--header-h);
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 16px; z-index: 100; direction: rtl;
+  }
+  .page-header-title {
+    font-size: 1.05rem; font-weight: 900; letter-spacing: -0.5px;
+    background: linear-gradient(135deg, var(--yellow) 0%, #f97316 60%, #ef4444 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    border: none; cursor: pointer; padding: 4px 0; font-family: inherit;
+  }
+  .header-btn {
+    background: var(--surface2); border: 1px solid var(--border); border-radius: 10px;
+    color: var(--text); font-family: 'Heebo', sans-serif; font-size: .85rem; font-weight: 700;
+    padding: 7px 13px; cursor: pointer; display: flex; align-items: center; gap: 5px;
+    transition: transform .1s, filter .1s;
+  }
+  .header-btn:active { transform: scale(.94); filter: brightness(.85); }
+
+  /* ===== SCREEN SYSTEM ===== */
+  .screen {
+    display: none; position: fixed; inset: 0;
+    flex-direction: column; align-items: center;
+    overflow-y: auto; animation: fadeIn .22s ease;
+  }
+  .screen.active { display: flex; }
+  .screen.has-header { padding-top: var(--header-h) !important; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ===== SHARED COMPONENTS ===== */
+  .btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%; padding: 18px 24px; border: none; border-radius: var(--radius);
+    font-family: 'Heebo', sans-serif; font-size: 1.15rem; font-weight: 700;
+    cursor: pointer; transition: transform .12s, filter .12s; letter-spacing: 0.3px;
+  }
+  .btn:active { transform: scale(.96); filter: brightness(.88); }
+  .btn-primary { background: var(--yellow); color: #0d0d14; }
+  .btn-green   { background: var(--green);  color: #fff; }
+  .btn-red     { background: var(--red);    color: #fff; }
+  .btn-surface { background: var(--surface2); border: 1.5px solid var(--border); color: var(--text); }
+  .btn-surface:active { filter: brightness(.85); }
+
+  label { display: block; font-size: .82rem; font-weight: 700; color: var(--text-dim); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .5px; }
+
+  input, select {
+    width: 100%; padding: 14px 16px; background: var(--surface2); border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm); color: var(--text);
+    font-family: 'Heebo', sans-serif; font-size: 1rem; font-weight: 600;
+    outline: none; transition: border-color .2s; direction: rtl;
+  }
+  input:focus, select:focus { border-color: var(--yellow); }
+  select option { background: var(--surface2); }
+
+  /* ===== SCREEN 1: START ===== */
+  #screen-start { padding: 20px 20px 44px; gap: 0; background: var(--bg); }
+
+  .logo { text-align: center; margin: 12px 0 24px; }
+  .logo-text {
+    font-size: 3rem; font-weight: 900; letter-spacing: -2px; line-height: 1;
+    background: linear-gradient(135deg, var(--yellow) 0%, #f97316 50%, #ef4444 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .logo-sub { font-size: .85rem; color: var(--text-dim); letter-spacing: 3px; text-transform: uppercase; margin-top: 5px; }
+
+  .form-section { width: 100%; margin-bottom: 14px; }
+  .form-section > label { margin-bottom: 10px; }
+
+  .players-grid { display: flex; flex-direction: column; gap: 9px; margin-top: 4px; }
+  .player-input-row {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--surface2); border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm); padding: 5px 14px; transition: border-color .2s;
+  }
+  .player-input-row:focus-within { border-color: var(--yellow); }
+  .player-num { font-size: .85rem; font-weight: 700; color: var(--text-dim); min-width: 22px; }
+  .player-input-row input { background: transparent; border: none; padding: 10px 0; font-size: 1rem; flex: 1; }
+  .player-input-row input:focus { border: none; }
+
+  .home-footer {
+    width: 100%; display: flex; align-items: center; justify-content: center;
+    gap: 6px; padding: 20px 0 4px; margin-top: 8px;
+  }
+  .footer-link {
+    background: none; border: none; color: var(--text-dim);
+    font-family: 'Heebo', sans-serif; font-size: .82rem; font-weight: 700;
+    cursor: pointer; padding: 6px 10px; border-radius: 8px;
+    transition: color .15s, background .15s; letter-spacing: .2px;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .footer-link:active, .footer-link:hover { color: var(--text); background: var(--surface2); }
+  .footer-sep { color: var(--border); font-size: .9rem; user-select: none; }
+
+  /* ===== SCREEN 2: REVEAL ===== */
+  #screen-reveal {
+    justify-content: center; padding: 24px 24px max(28px, env(safe-area-inset-bottom));
+    background: radial-gradient(ellipse at 50% 30%, #1a1a2e 0%, var(--bg) 70%);
+    gap: 0;
+  }
+
+  .reveal-progress { width: 100%; display: flex; gap: 5px; margin-bottom: 30px; }
+  .reveal-dot { flex: 1; height: 4px; border-radius: 2px; background: var(--surface2); transition: background .3s; }
+  .reveal-dot.done    { background: var(--green); }
+  .reveal-dot.current { background: var(--yellow); }
+
+  .reveal-icon-wrap { text-align: center; margin-bottom: 20px; animation: bounce 1.6s ease-in-out infinite; }
+  .reveal-icon-wrap.static { animation: none; }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+
+  .reveal-player-name { font-size: 2.1rem; font-weight: 900; text-align: center; margin-bottom: 6px; }
+  .reveal-sub { font-size: .95rem; color: var(--text-dim); text-align: center; margin-bottom: 22px; line-height: 1.6; }
+
+  /* Role card */
+  .role-card {
+    width: 100%; border-radius: var(--radius); padding: 26px 20px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; gap: 10px; margin-bottom: 22px; transition: all .2s;
+  }
+  .role-card.cover   { background: var(--surface); border: 2px solid var(--border); }
+  .role-card.citizen { background: rgba(34,197,94,.08); border: 2px solid var(--green); animation: cardPop .35s cubic-bezier(.175,.885,.32,1.275); }
+  .role-card.imposter{ background: rgba(239,68,68,.08); border: 2px solid var(--red);   animation: cardPop .35s cubic-bezier(.175,.885,.32,1.275); }
+  @keyframes cardPop { from{transform:scale(.88);opacity:0} to{transform:scale(1);opacity:1} }
+
+  .role-label { font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; }
+  .role-word  { font-size: 2.6rem; font-weight: 900; letter-spacing: -1.5px; color: var(--green); line-height: 1.1; }
+  .role-cat   { font-size: .8rem; color: var(--text-dim); font-weight: 700; }
+  .role-desc  { font-size: .95rem; color: var(--text); line-height: 1.55; }
+
+  /* ===== SCREEN 3: DISCUSSION ===== */
+  #screen-discussion { justify-content: flex-start; padding: 20px 20px 44px; gap: 0; background: var(--bg); }
+
+  .screen-title { font-size: 1.45rem; font-weight: 900; text-align: center; width: 100%; margin-bottom: 6px; }
+  .screen-sub   { font-size: .9rem; color: var(--text-dim); text-align: center; width: 100%; margin-bottom: 20px; line-height: 1.65; }
+
+  .instruction-box {
+    width: 100%; background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 16px 18px; margin-bottom: 18px;
+  }
+  .instruction-box p { font-size: .92rem; line-height: 1.7; }
+  .instruction-box strong { color: var(--yellow); }
+
+  .player-list { width: 100%; display: flex; flex-direction: column; gap: 8px; margin-bottom: 22px; }
+  .player-row {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 13px 16px;
+  }
+  .pr-num  { font-size: .82rem; font-weight: 700; color: var(--text-dim); min-width: 18px; }
+  .pr-name { font-size: .98rem; font-weight: 700; flex: 1; }
+  .pr-badge {
+    font-size: .75rem; font-weight: 700; padding: 3px 10px;
+    border-radius: 20px; white-space: nowrap;
+  }
+  .pr-badge.first { background: rgba(250,204,21,.13); border: 1px solid rgba(250,204,21,.35); color: var(--yellow); }
+  .pr-badge.order { background: var(--surface2); border: 1px solid var(--border); color: var(--text-dim); }
+
+  /* ===== SCREEN 4: VOTE ===== */
+  #screen-vote { justify-content: flex-start; padding: 20px 20px 44px; gap: 0; background: var(--bg); }
+
+  .vote-btn {
+    width: 100%; display: flex; align-items: center; gap: 14px;
+    background: var(--surface); border: 2px solid var(--border);
+    border-radius: var(--radius-sm); padding: 15px 18px; margin-bottom: 8px;
+    cursor: pointer; transition: all .15s; font-family: 'Heebo', sans-serif; color: var(--text);
+    text-align: right;
+  }
+  .vote-btn:active { transform: scale(.97); }
+  .vote-btn.selected { border-color: var(--red); background: rgba(239,68,68,.09); }
+  .vb-num   { font-size: .82rem; font-weight: 700; color: var(--text-dim); min-width: 18px; }
+  .vb-name  { font-size: 1.05rem; font-weight: 700; flex: 1; }
+  .vb-icon  { font-size: 1.25rem; width: 1.25rem; height: 1.25rem; opacity: 0; transition: opacity .15s; color: var(--red); flex-shrink: 0; }
+  .vote-btn.selected .vb-icon { opacity: 1; }
+
+  #vote-confirm { width: 100%; margin-top: 4px; display: none; }
+
+  /* ===== SCREEN 5: GUESS ===== */
+  #screen-guess {
+    justify-content: center; padding: 28px 22px max(28px, env(safe-area-inset-bottom));
+    background: radial-gradient(ellipse at 50% 30%, #200a0a 0%, var(--bg) 70%);
+    gap: 0;
+  }
+
+  .guess-hd { text-align: center; margin-bottom: 28px; }
+  .guess-emoji { font-size: 4rem; display: block; margin-bottom: 14px; animation: bounce 1.8s ease-in-out infinite; }
+  .guess-title { font-size: 1.5rem; font-weight: 900; margin-bottom: 8px; }
+  .guess-sub   { font-size: .9rem; color: var(--text-dim); line-height: 1.65; }
+  .guess-sub strong { color: var(--text); }
+
+  .guess-choices { width: 100%; display: flex; flex-direction: column; gap: 10px; }
+  .guess-choice {
+    width: 100%; padding: 18px 22px; border-radius: var(--radius);
+    background: var(--surface); border: 2px solid var(--border);
+    font-family: 'Heebo', sans-serif; font-size: 1.2rem; font-weight: 700;
+    color: var(--text); cursor: pointer; transition: all .15s; text-align: center;
+  }
+  .guess-choice:active { transform: scale(.97); filter: brightness(.9); }
+  .guess-choice:hover  { border-color: rgba(239,68,68,.6); background: rgba(239,68,68,.06); }
+
+  /* ===== SCREEN 6: RESULT ===== */
+  #screen-result {
+    justify-content: center; align-items: center;
+    padding: 28px 20px 52px; gap: 0; text-align: center;
+  }
+  #screen-result.imposter-wins { background: radial-gradient(ellipse at 50% 40%, #20080a 0%, var(--bg) 65%); }
+  #screen-result.citizens-win  { background: radial-gradient(ellipse at 50% 40%, #081a08 0%, var(--bg) 65%); }
+
+  .confetti-area  { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+  .confetti-piece { position: absolute; animation: confetti-fall linear forwards; opacity: 0; }
+  @keyframes confetti-fall { 0%{transform:translateY(-20px) rotate(0deg);opacity:1} 100%{transform:translateY(110vh) rotate(720deg);opacity:.2} }
+
+  .result-crown { font-size: 4.8rem; display: block; margin-bottom: 16px; animation: pulse 1.5s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.08)} }
+  .result-label  { font-size: .9rem; color: var(--text-dim); font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+  .result-name   { font-size: 2.3rem; font-weight: 900; letter-spacing: -1.5px; margin-bottom: 28px; line-height: 1.2; }
+
+  .result-info {
+    width: 100%; background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden; margin-bottom: 28px;
+  }
+  .result-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 13px 18px; border-bottom: 1px solid var(--border);
+  }
+  .result-row:last-child { border-bottom: none; }
+  .result-row-label { font-size: .8rem; font-weight: 700; color: var(--text-dim); text-transform: uppercase; letter-spacing: .5px; }
+  .result-row-value { font-size: 1rem; font-weight: 900; }
+
+  /* ===== INFO BOTTOM SHEET ===== */
+  #info-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.65); z-index: 200; }
+  #info-backdrop.open { display: block; }
+  #info-sheet {
+    display: none; position: fixed; bottom: 0; left: 0; right: 0;
+    background: var(--surface); border-top: 1px solid var(--border);
+    border-radius: 24px 24px 0 0; padding: 20px 24px 44px;
+    z-index: 201; max-height: 82vh; overflow-y: auto;
+    animation: slideUp .2s ease;
+  }
+  #info-sheet.open { display: block; }
+  @keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
+
+  .info-handle { width: 40px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 16px; }
+  .info-tabs {
+    display: flex; gap: 6px; margin-bottom: 20px;
+    background: var(--surface2); border-radius: 12px; padding: 4px;
+  }
+  .info-tab {
+    flex: 1; padding: 9px 12px; border: none; border-radius: 9px;
+    font-family: 'Heebo', sans-serif; font-size: .88rem; font-weight: 700;
+    cursor: pointer; color: var(--text-dim); background: transparent;
+    transition: background .15s, color .15s;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  .info-tab.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 4px rgba(0,0,0,.4); }
+
+  .rules-section { margin-bottom: 20px; }
+  .rules-section h3 {
+    font-size: .78rem; font-weight: 700; color: var(--text-dim);
+    text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .rules-section p { font-size: .95rem; color: var(--text); line-height: 1.65; }
+  .rules-item {
+    display: flex; gap: 12px; align-items: flex-start;
+    background: var(--surface2); border-radius: 12px; padding: 12px 14px; margin-bottom: 8px;
+  }
+  .ri-text { font-size: .92rem; color: var(--text); line-height: 1.5; }
+  .ri-text strong { color: var(--yellow); }
+
+  .about-link {
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px 16px; margin-bottom: 10px;
+    text-decoration: none; color: var(--text); transition: border-color .15s;
+  }
+  .about-link:active { border-color: var(--yellow); }
+  .about-link-label { font-size: .95rem; font-weight: 700; }
+  .about-link-sub   { font-size: .78rem; color: var(--text-dim); margin-top: 2px; }
+  .about-tm { text-align: center; font-size: .78rem; color: var(--text-dim); margin-top: 18px; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<!-- ===== GLOBAL HEADER ===== -->
+<div id="page-header" class="page-header" style="display:none">
+  <button class="page-header-title" onclick="goHome()">המתחזה</button>
+  <div id="header-slot"></div>
+</div>
+
+<!-- ===== INFO BOTTOM SHEET ===== -->
+<div id="info-backdrop" onclick="closeInfo()"></div>
+<div id="info-sheet">
+  <div class="info-handle"></div>
+  <div class="info-tabs">
+    <button type="button" class="info-tab active" id="tab-rules" onclick="switchInfoTab('rules')">
+      <iconify-icon icon="mdi:help-circle-outline"></iconify-icon> איך משחקים
+    </button>
+    <button type="button" class="info-tab" id="tab-about" onclick="switchInfoTab('about')">
+      <iconify-icon icon="mdi:information-outline"></iconify-icon> אודות
+    </button>
+  </div>
+  <div id="info-content"></div>
+</div>
+
+<!-- ===== SCREEN 1: START ===== -->
+<div id="screen-start" class="screen active">
+  <div class="logo">
+    <div class="logo-text">המתחזה</div>
+    <div class="logo-sub">הסוד · השקר · הניצחון</div>
+  </div>
+
+  <div class="form-section" style="margin-bottom:12px">
+    <label><iconify-icon icon="mdi:account-group-outline" style="font-size:.82rem;width:.82rem;height:.82rem"></iconify-icon> מספר שחקנים</label>
+    <select id="num-players" onchange="onNumPlayersChange()">
+      <option value="3">3 שחקנים</option>
+      <option value="4" selected>4 שחקנים</option>
+      <option value="5">5 שחקנים</option>
+      <option value="6">6 שחקנים</option>
+      <option value="7">7 שחקנים</option>
+      <option value="8">8 שחקנים</option>
+      <option value="9">9 שחקנים</option>
+      <option value="10">10 שחקנים</option>
+    </select>
+  </div>
+
+  <div class="form-section" style="margin-bottom:12px">
+    <label><iconify-icon icon="mdi:account-outline" style="font-size:.82rem;width:.82rem;height:.82rem"></iconify-icon> שמות שחקנים</label>
+    <div class="players-grid" id="player-inputs"></div>
+  </div>
+
+  <div class="form-section" style="margin-bottom:22px">
+    <label><iconify-icon icon="mdi:shape-outline" style="font-size:.82rem;width:.82rem;height:.82rem"></iconify-icon> קטגוריה</label>
+    <select id="category-select">
+      <option value="random">🎲 אקראי</option>
+      <option value="חיות">🐾 חיות</option>
+      <option value="מאכלים">🍕 מאכלים</option>
+      <option value="חפצים בבית">🏠 חפצים בבית</option>
+      <option value="מדינות">🌍 מדינות</option>
+      <option value="מקצועות">💼 מקצועות</option>
+      <option value="ספורט">⚽ ספורט</option>
+      <option value="טבע">🌿 טבע</option>
+      <option value="סרטים">🎬 סרטים וטלוויזיה</option>
+    </select>
+  </div>
+
+  <div style="width:100%">
+    <button type="button" class="btn btn-primary" onclick="startGame()">
+      <iconify-icon icon="mdi:spy"></iconify-icon> התחל משחק!
+    </button>
+  </div>
+
+  <div class="home-footer">
+    <button class="footer-link" onclick="openInfo('rules')">
+      <iconify-icon icon="mdi:help-circle-outline"></iconify-icon> איך משחקים
+    </button>
+    <span class="footer-sep">·</span>
+    <button class="footer-link" onclick="openInfo('about')">
+      <iconify-icon icon="mdi:information-outline"></iconify-icon> אודות
+    </button>
+  </div>
+</div>
+
+<!-- ===== SCREEN 2: REVEAL (pass & play) ===== -->
+<div id="screen-reveal" class="screen">
+  <div class="reveal-progress" id="reveal-progress"></div>
+
+  <div class="reveal-icon-wrap" id="reveal-icon">
+    <iconify-icon icon="mdi:eye-off-outline" style="font-size:4.5rem;width:4.5rem;height:4.5rem;color:var(--text-dim)"></iconify-icon>
+  </div>
+
+  <div class="reveal-player-name" id="reveal-name">שחקן 1</div>
+  <div class="reveal-sub" id="reveal-sub">תורך לצפות בתפקידך.<br>אל תראה למישהו אחר!</div>
+
+  <div id="role-card" class="role-card cover">
+    <iconify-icon icon="mdi:lock-outline" style="font-size:2.6rem;width:2.6rem;height:2.6rem;color:var(--text-dim)"></iconify-icon>
+    <div class="role-label" style="color:var(--text-dim)">מוסתר</div>
+  </div>
+
+  <div id="reveal-action" style="width:100%">
+    <button class="btn btn-primary" onclick="tapToReveal()">
+      <iconify-icon icon="mdi:eye-outline"></iconify-icon> לחץ לצפייה
+    </button>
+  </div>
+</div>
+
+<!-- ===== SCREEN 3: DISCUSSION ===== -->
+<div id="screen-discussion" class="screen has-header">
+  <div class="screen-title">💬 זמן הדיון!</div>
+  <div class="screen-sub">כל שחקן אומר בתורו מילה אחת הקשורה<br>למילה הסודית — ואז מצביעים!</div>
+
+  <div class="instruction-box">
+    <p>
+      <strong>כלל הדיבור:</strong> כל שחקן אומר <strong>מילה אחת בלבד</strong>.
+      אסור לומר את המילה הסודית עצמה, לחזור על מה שנאמר, או לתת רמזים מפורשים.
+      המתחזה <strong>לא יודע</strong> את המילה — ינסה להשתלב!
+    </p>
+  </div>
+
+  <div style="width:100%;margin-bottom:6px">
+    <label style="margin-bottom:8px"><iconify-icon icon="mdi:sort-numeric-ascending" style="font-size:.82rem;width:.82rem;height:.82rem"></iconify-icon> סדר דיבור מוגרל</label>
+    <div class="player-list" id="discussion-list"></div>
+  </div>
+
+  <button class="btn btn-primary" onclick="showVote()" style="margin-top:4px">
+    <iconify-icon icon="mdi:vote-outline"></iconify-icon> עבור להצבעה
+  </button>
+</div>
+
+<!-- ===== SCREEN 4: VOTE ===== -->
+<div id="screen-vote" class="screen has-header">
+  <div class="screen-title">🗳️ זמן להצביע!</div>
+  <div class="screen-sub">מי לדעתכם <strong style="color:var(--red)">המתחזה</strong>?</div>
+
+  <div id="vote-list" style="width:100%"></div>
+
+  <div id="vote-confirm">
+    <button class="btn btn-red" onclick="confirmVote()">
+      <iconify-icon icon="mdi:gavel"></iconify-icon> אשר הצבעה
+    </button>
+  </div>
+</div>
+
+<!-- ===== SCREEN 5: GUESS (imposter's last chance) ===== -->
+<div id="screen-guess" class="screen">
+  <div class="guess-hd">
+    <span class="guess-emoji">🕵️</span>
+    <div class="guess-title">הזדמנות אחרונה!</div>
+    <div class="guess-sub" id="guess-sub">תפסו אותך! ניחוש נכון של המילה הסודית יזכה אותך בניצחון.</div>
+  </div>
+  <div class="guess-choices" id="guess-choices"></div>
+</div>
+
+<!-- ===== SCREEN 6: RESULT ===== -->
+<div id="screen-result" class="screen">
+  <div class="confetti-area" id="confetti-area"></div>
+  <span class="result-crown" id="result-crown">🎉</span>
+  <div class="result-label">המנצחים</div>
+  <div class="result-name" id="result-name">האזרחים</div>
+
+  <div class="result-info" style="width:100%">
+    <div class="result-row">
+      <span class="result-row-label">המתחזה היה</span>
+      <span class="result-row-value" id="ri-imposter" style="color:var(--red)">—</span>
+    </div>
+    <div class="result-row">
+      <span class="result-row-label">המילה הסודית</span>
+      <span class="result-row-value" id="ri-word" style="color:var(--yellow)">—</span>
+    </div>
+    <div class="result-row">
+      <span class="result-row-label">קטגוריה</span>
+      <span class="result-row-value" id="ri-category" style="color:var(--blue)">—</span>
+    </div>
+  </div>
+
+  <div style="width:100%">
+    <button class="btn btn-primary" onclick="newGame()">
+      <iconify-icon icon="mdi:refresh"></iconify-icon> משחק חדש
+    </button>
+  </div>
+</div>
+
+<script>
+// ============================= WORD BANK =============================
+const CATEGORIES = {
+  'חיות': [
+    'כלב','חתול','אריה','פיל','קוף',"ג'ירפה",'זברה','דולפין','נשר','ארנב',
+    'חמור','פרה','עז','ברווז','תרנגול','נמר','דוב','כריש','צפרדע','צב',
+    'פינגווין','נחש','תוכי','חזיר','פרפר','נמלה','חיפושית','כבשה','גמל','אייל'
+  ],
+  'מאכלים': [
+    'פיצה','המבורגר','סושי','פסטה','שווארמה','פלאפל','גלידה','עוגה','שוקולד','בורקס',
+    'פיתה','עוף','סלמון','חומוס','מרק','לחם','אורז','ביצה','גבינה','עגבנייה',
+    'בננה','תפוח','ענבים','אבוקדו','גזר','פסטה','לאגנה','קרפ','וופל','דונאט'
+  ],
+  'חפצים בבית': [
+    'כיסא','שולחן','מקרר','תנור','מיטה','ספה','טלוויזיה','מנורה','מראה','שטיח',
+    'ארון','כרית','שמיכה','מיקרוגל','כוס','מחשב','מדף','דלת','חלון','מטאטא',
+    'ברז','כיור','מגבת','סכין','מצלמה','שעון','אוזניות','מרפסת','קולב','מזוודה'
+  ],
+  'מדינות': [
+    'ישראל','ברזיל','יפן','צרפת','איטליה','גרמניה','אוסטרליה','קנדה','הודו','ספרד',
+    'מקסיקו','רוסיה','סין','בריטניה','פורטוגל','תורכיה','ארגנטינה','מרוקו','פולין','שוודיה',
+    'נורווגיה','אוסטריה','שווייץ','בלגיה','הולנד','יוון','מצרים','דרום אפריקה','קוריאה','אירלנד'
+  ],
+  'מקצועות': [
+    'רופא','מורה','שוטר','טבח','עורך דין','מהנדס','אדריכל','פסיכולוג','טייס','שחקן',
+    'זמר','נהג','ספר','עיתונאי','פוליטיקאי','רופא שיניים','מכונאי','כלכלן','מאמן','כבאי',
+    'חייל','גנן','חקלאי','מלצר','צלם','מתכנת','אחות','ספן','אסטרונאוט','פסל'
+  ],
+  'ספורט': [
+    'כדורגל','כדורסל','טניס','שחייה','גולף','סקי','אגרוף','התעמלות','רכיבה','כדור עף',
+    'ריצה','אופניים','סקייטבורד','גלישה','כדוריד','קראטה','יוגה','שחמט','בדמינטון','רוגבי',
+    'פינג פונג','ג\'ודו','גלגיליות','טריאתלון','ירייה','סיוף','פולו','צלילה','קפיצה למים','אמנות לחימה'
+  ],
+  'טבע': [
+    'הר','ים','מדבר','יער','נהר','אגם','מפל','מערה','חוף','אי',
+    'ענן','שלג','ברק','גשם','שמש','כוכב','ירח','רוח','פרח','עץ',
+    'עלה','חול','קרח','גל','בוץ','ריף','בצה','שיח','מולקנו','צונאמי'
+  ],
+  'סרטים': [
+    'גיבור','נבל','ריגול','אנימציה','אימה','קומדיה','דרמה','מדע בדיוני','תיעודי','סדרה',
+    'בימאי','אוסקר','טריילר','פופקורן','קולנוע','עריכה','תסריט','פסקול','אקשן','פנטזיה',
+    'רובוט','חייזר','ריגול','מסכה','בובה','רוח רפאים','פרס','מחיאות','ביקורת','הצגה'
+  ],
+};
+
+// ============================= GAME STATE =============================
+const G = {
+  players:          [],
+  numPlayers:       4,
+  imposterIndex:    -1,
+  secretWord:       '',
+  category:         '',
+  currentReveal:    0,
+  roleVisible:      false,
+  votedPlayer:      -1,
+};
+
+// ============================= INIT =============================
+document.addEventListener('DOMContentLoaded', onNumPlayersChange);
+
+function onNumPlayersChange() {
+  const n = parseInt(document.getElementById('num-players').value);
+  G.numPlayers = n;
+  const grid = document.getElementById('player-inputs');
+  grid.innerHTML = '';
+  for (let i = 0; i < n; i++) {
+    const row = document.createElement('div');
+    row.className = 'player-input-row';
+    row.innerHTML = `<span class="player-num">${i + 1}</span>
+      <input type="text" id="pname-${i}" placeholder="שחקן ${i + 1}" maxlength="18">`;
+    grid.appendChild(row);
+  }
+}
+
+// ============================= START =============================
+function startGame() {
+  const n = parseInt(document.getElementById('num-players').value);
+  G.numPlayers = n;
+  G.players = [];
+  for (let i = 0; i < n; i++) {
+    const v = document.getElementById(`pname-${i}`).value.trim();
+    G.players.push(v || `שחקן ${i + 1}`);
+  }
+
+  let cat = document.getElementById('category-select').value;
+  if (cat === 'random') {
+    const cats = Object.keys(CATEGORIES);
+    cat = cats[~~(Math.random() * cats.length)];
+  }
+  G.category    = cat;
+  G.secretWord  = pickRandom(CATEGORIES[cat]);
+  G.imposterIndex = ~~(Math.random() * n);
+  G.currentReveal = 0;
+  G.roleVisible   = false;
+  G.votedPlayer   = -1;
+
+  setHeader(false);
+  renderReveal(0);
+}
+
+// ============================= REVEAL PHASE =============================
+function renderReveal(idx) {
+  G.currentReveal = idx;
+  G.roleVisible   = false;
+
+  // Progress dots
+  document.getElementById('reveal-progress').innerHTML =
+    G.players.map((_, i) =>
+      `<div class="reveal-dot ${i < idx ? 'done' : i === idx ? 'current' : ''}"></div>`
+    ).join('');
+
+  // Player label
+  document.getElementById('reveal-name').textContent = G.players[idx];
+  document.getElementById('reveal-sub').innerHTML = 'תורך לצפות בתפקידך.<br>אל תראה למישהו אחר!';
+
+  // Reset icon (bouncing, hidden state)
+  const iconEl = document.getElementById('reveal-icon');
+  iconEl.className = 'reveal-icon-wrap';
+  iconEl.innerHTML = `<iconify-icon icon="mdi:eye-off-outline"
+    style="font-size:4.5rem;width:4.5rem;height:4.5rem;color:var(--text-dim)"></iconify-icon>`;
+
+  // Reset card to cover
+  const card = document.getElementById('role-card');
+  card.className = 'role-card cover';
+  card.innerHTML = `
+    <iconify-icon icon="mdi:lock-outline"
+      style="font-size:2.6rem;width:2.6rem;height:2.6rem;color:var(--text-dim)"></iconify-icon>
+    <div class="role-label" style="color:var(--text-dim)">מוסתר</div>`;
+
+  // Reset action button
+  document.getElementById('reveal-action').innerHTML = `
+    <button class="btn btn-primary" onclick="tapToReveal()">
+      <iconify-icon icon="mdi:eye-outline"></iconify-icon> לחץ לצפייה
+    </button>`;
+
+  showScreen('screen-reveal');
+}
+
+function tapToReveal() {
+  G.roleVisible = true;
+  const isImposter = G.currentReveal === G.imposterIndex;
+
+  // Update icon (static, no bounce)
+  const iconEl = document.getElementById('reveal-icon');
+  iconEl.className = 'reveal-icon-wrap static';
+  iconEl.innerHTML = isImposter
+    ? `<iconify-icon icon="mdi:spy"
+        style="font-size:4.5rem;width:4.5rem;height:4.5rem;color:var(--red)"></iconify-icon>`
+    : `<iconify-icon icon="mdi:shield-check-outline"
+        style="font-size:4.5rem;width:4.5rem;height:4.5rem;color:var(--green)"></iconify-icon>`;
+
+  // Reveal role card
+  const card = document.getElementById('role-card');
+  if (isImposter) {
+    card.className = 'role-card imposter';
+    card.innerHTML = `
+      <div style="font-size:2.8rem">🕵️</div>
+      <div class="role-label" style="color:var(--red)">אתה המתחזה!</div>
+      <div class="role-desc">נסה להשתלב ולא להיתפס.<br>אין לך מושג מה המילה הסודית — <strong style="color:var(--red)">תאלתר!</strong></div>`;
+  } else {
+    card.className = 'role-card citizen';
+    card.innerHTML = `
+      <div class="role-label" style="color:var(--green)">אתה אזרח 🟢</div>
+      <div class="role-word">${G.secretWord}</div>
+      <div class="role-cat">קטגוריה: ${G.category}</div>`;
+  }
+
+  document.getElementById('reveal-sub').textContent = 'זכרת? מעולה! העבר את הטלפון הלאה.';
+
+  // Update action button
+  const isLast = G.currentReveal === G.numPlayers - 1;
+  document.getElementById('reveal-action').innerHTML = `
+    <button class="btn btn-green" onclick="acknowledgeReveal()">
+      <iconify-icon icon="mdi:check-circle-outline"></iconify-icon>
+      ${isLast ? 'כולם מוכנים — התחל דיון!' : 'הבנתי, העבר לשחקן הבא'}
+    </button>`;
+
+  vibrate([60]);
+}
+
+function acknowledgeReveal() {
+  const next = G.currentReveal + 1;
+  if (next < G.numPlayers) {
+    renderReveal(next);
+  } else {
+    showDiscussion();
+  }
+}
+
+// ============================= DISCUSSION =============================
+function showDiscussion() {
+  const HELP = helpBtn();
+  setHeader(true, HELP);
+
+  // Randomize speaking order
+  const order = shuffle([...Array(G.numPlayers).keys()]);
+  document.getElementById('discussion-list').innerHTML = order.map((pi, pos) => `
+    <div class="player-row">
+      <span class="pr-num">${pos + 1}</span>
+      <span class="pr-name">${G.players[pi]}</span>
+      <span class="pr-badge ${pos === 0 ? 'first' : 'order'}">${pos === 0 ? 'מתחיל! 🎙️' : `#${pos + 1}`}</span>
+    </div>`).join('');
+
+  showScreen('screen-discussion');
+}
+
+// ============================= VOTE =============================
+function showVote() {
+  setHeader(true, helpBtn());
+  G.votedPlayer = -1;
+
+  document.getElementById('vote-list').innerHTML = G.players.map((name, i) => `
+    <button class="vote-btn" id="vbtn-${i}" onclick="selectVote(${i})">
+      <span class="vb-num">${i + 1}</span>
+      <span class="vb-name">${name}</span>
+      <iconify-icon icon="mdi:close-circle-outline" class="vb-icon"></iconify-icon>
+    </button>`).join('');
+
+  document.getElementById('vote-confirm').style.display = 'none';
+  showScreen('screen-vote');
+}
+
+function selectVote(idx) {
+  G.players.forEach((_, i) => document.getElementById(`vbtn-${i}`).classList.remove('selected'));
+  document.getElementById(`vbtn-${idx}`).classList.add('selected');
+  G.votedPlayer = idx;
+  document.getElementById('vote-confirm').style.display = 'block';
+  vibrate([30]);
+}
+
+function confirmVote() {
+  if (G.votedPlayer < 0) return;
+  if (G.votedPlayer === G.imposterIndex) {
+    showGuess();
+  } else {
+    showResult(true, false); // imposter wins — wrong citizen voted out
+  }
+}
+
+// ============================= GUESS =============================
+function showGuess() {
+  setHeader(false);
+  const impName = G.players[G.imposterIndex];
+  document.getElementById('guess-sub').innerHTML =
+    `<strong>${impName}</strong>, תפסו אותך!<br>נחש את המילה הסודית — ונצח!`;
+
+  // 4 choices: real word + 3 distractors from the same category
+  const pool     = CATEGORIES[G.category].filter(w => w !== G.secretWord);
+  const shuffled = shuffle([...pool]).slice(0, 3);
+  const choices  = shuffle([G.secretWord, ...shuffled]);
+
+  document.getElementById('guess-choices').innerHTML = choices.map(w => `
+    <button class="guess-choice" data-word="${w}" onclick="submitGuess(this)">
+      ${w}
+    </button>`).join('');
+
+  showScreen('screen-guess');
+}
+
+function submitGuess(btn) {
+  const guessed = btn.dataset.word === G.secretWord;
+  showResult(guessed, true);
+}
+
+// ============================= RESULT =============================
+function showResult(imposterWon, guessAttempted) {
+  setHeader(false);
+
+  const screen = document.getElementById('screen-result');
+  screen.className = `screen ${imposterWon ? 'imposter-wins' : 'citizens-win'}`;
+
+  const crownEl = document.getElementById('result-crown');
+  const nameEl  = document.getElementById('result-name');
+
+  if (imposterWon) {
+    crownEl.textContent = '🕵️';
+    if (guessAttempted) {
+      nameEl.innerHTML = `<span style="color:var(--red)">המתחזה ניחש וניצח!</span>`;
+    } else {
+      const wrongName = G.players[G.votedPlayer];
+      nameEl.innerHTML = `<span style="color:var(--red)">המתחזה ניצח!</span>
+        <div style="font-size:1.1rem;color:var(--text-dim);margin-top:6px;font-weight:700">הצבעתם על ${wrongName} — אזרח תמים 😅</div>`;
+    }
+    vibrate([500]);
+  } else {
+    crownEl.textContent = '🎉';
+    nameEl.innerHTML = `<span style="color:var(--green)">האזרחים ניצחו!</span>`;
+    launchConfetti();
+    vibrate([200, 100, 200, 100, 400]);
+  }
+
+  document.getElementById('ri-imposter').textContent  = G.players[G.imposterIndex];
+  document.getElementById('ri-word').textContent      = G.secretWord;
+  document.getElementById('ri-category').textContent  = G.category;
+
+  showScreen('screen-result');
+}
+
+// ============================= NAV HELPERS =============================
+function goHome() {
+  if (!confirm('לחזור לדף הבית? המשחק הנוכחי יאופס.')) return;
+  setHeader(false);
+  showScreen('screen-start');
+}
+
+function newGame() {
+  setHeader(false);
+  showScreen('screen-start');
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function setHeader(visible, slotHtml = '') {
+  document.getElementById('page-header').style.display = visible ? 'flex' : 'none';
+  document.getElementById('header-slot').innerHTML = slotHtml;
+}
+
+function helpBtn() {
+  return `<button class="header-btn" onclick="openInfo('rules')">
+    <iconify-icon icon="mdi:help-circle-outline"></iconify-icon> כללים</button>`;
+}
+
+// ============================= CONFETTI =============================
+function launchConfetti() {
+  const area = document.getElementById('confetti-area');
+  area.innerHTML = '';
+  const colors = ['#facc15','#22c55e','#38bdf8','#f97316','#a855f7','#ec4899','#fff'];
+  for (let i = 0; i < 60; i++) {
+    const p = document.createElement('div');
+    p.className = 'confetti-piece';
+    p.style.cssText = [
+      `left:${Math.random()*100}%`,
+      `background:${colors[~~(Math.random()*colors.length)]}`,
+      `width:${6+Math.random()*10}px`,
+      `height:${6+Math.random()*10}px`,
+      `border-radius:${Math.random()>.5?'50%':'2px'}`,
+      `animation-duration:${2+Math.random()*3}s`,
+      `animation-delay:${Math.random()*1.5}s`,
+    ].join(';');
+    area.appendChild(p);
+  }
+}
+
+// ============================= UTILS =============================
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = ~~(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+function pickRandom(arr) { return arr[~~(Math.random() * arr.length)]; }
+function vibrate(p) { try { navigator.vibrate && navigator.vibrate(p); } catch(e) {} }
+
+// ============================= INFO SHEET =============================
+const INFO_CONTENT = {
+  rules: `
+    <div class="rules-section">
+      <h3><iconify-icon icon="mdi:cellphone-arrow-down-variant"></iconify-icon> Pass &amp; Play</h3>
+      <p>משחק מסיבה לקבוצה אחת עם טלפון אחד. כל שחקן רואה בסתר את תפקידו.</p>
+    </div>
+    <div class="rules-section">
+      <h3><iconify-icon icon="mdi:spy"></iconify-icon> הגדרות</h3>
+      <p>מרבית השחקנים הם <strong style="color:var(--green)">אזרחים</strong> שיודעים את המילה הסודית. שחקן אחד בלבד הוא <strong style="color:var(--red)">המתחזה</strong> — הוא לא יודע!</p>
+    </div>
+    <div class="rules-section">
+      <h3><iconify-icon icon="mdi:play-circle-outline"></iconify-icon> מהלך המשחק</h3>
+      <div class="rules-item">
+        <span class="ri-icon"><iconify-icon icon="mdi:numeric-1-circle-outline"></iconify-icon></span>
+        <span class="ri-text">כל שחקן מקבל בסתר את תפקידו — <strong>אזרח</strong> (רואה את המילה) או <strong>מתחזה</strong>.</span>
+      </div>
+      <div class="rules-item">
+        <span class="ri-icon"><iconify-icon icon="mdi:numeric-2-circle-outline"></iconify-icon></span>
+        <span class="ri-text">כל שחקן אומר בתורו <strong>מילה אחת בלבד</strong> הקשורה למילה הסודית — המתחזה צריך להמציא!</span>
+      </div>
+      <div class="rules-item">
+        <span class="ri-icon"><iconify-icon icon="mdi:vote-outline"></iconify-icon></span>
+        <span class="ri-text">לאחר שכולם דיברו, <strong>מצביעים</strong> יחד מי לדעתם המתחזה.</span>
+      </div>
+    </div>
+    <div class="rules-section">
+      <h3><iconify-icon icon="mdi:trophy-outline"></iconify-icon> תנאי ניצחון</h3>
+      <div class="rules-item">
+        <span class="ri-icon"><iconify-icon icon="mdi:check-circle-outline" style="color:var(--green)"></iconify-icon></span>
+        <span class="ri-text"><strong>אזרחים מנצחים:</strong> הצביעו על המתחזה — והוא לא הצליח לנחש את המילה הסודית.</span>
+      </div>
+      <div class="rules-item">
+        <span class="ri-icon"><iconify-icon icon="mdi:close-circle-outline" style="color:var(--red)"></iconify-icon></span>
+        <span class="ri-text"><strong>המתחזה מנצח:</strong> הצביעו על אזרח תמים — <em>או</em> שהמתחזה נתפס אך ניחש נכון!</span>
+      </div>
+    </div>`,
+  about: `
+    <a class="about-link" href="https://loteman.github.io/Loteman-Games/" target="_blank" rel="noopener">
+      <div>
+        <div class="about-link-label"><iconify-icon icon="mdi:gamepad-variant-outline"></iconify-icon> Loteman Games</div>
+        <div class="about-link-sub">למשחקים נוספים — לחץ לביקור באתר</div>
+      </div>
+      <iconify-icon icon="mdi:open-in-new" style="font-size:1rem;color:var(--text-dim)"></iconify-icon>
+    </a>
+    <div class="about-tm">המתחזה © 2026<br>כל הזכויות שמורות ל-Loteman Games</div>`
+};
+
+let _infoTab = 'rules';
+
+function openInfo(type) {
+  _infoTab = type || 'rules';
+  document.getElementById('tab-rules').classList.toggle('active', _infoTab === 'rules');
+  document.getElementById('tab-about').classList.toggle('active', _infoTab === 'about');
+  document.getElementById('info-content').innerHTML = INFO_CONTENT[_infoTab];
+  if (!document.getElementById('info-sheet').classList.contains('open')) {
+    document.getElementById('info-backdrop').classList.add('open');
+    document.getElementById('info-sheet').classList.add('open');
+  }
+}
+function switchInfoTab(type) { openInfo(type); }
+function closeInfo() {
+  document.getElementById('info-backdrop').classList.remove('open');
+  document.getElementById('info-sheet').classList.remove('open');
+}
+</script>
+</body>
+</html>
