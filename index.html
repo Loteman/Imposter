@@ -132,6 +132,54 @@
   .footer-link:active, .footer-link:hover { color: var(--text); background: var(--surface2); }
   .footer-sep { color: var(--border); font-size: .9rem; user-select: none; }
 
+  /* ---- Game settings: numeric box ---- */
+  .setting-box {
+    background: var(--surface2); border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm); padding: 14px 16px;
+    display: flex; flex-direction: column; gap: 6px; margin-bottom: 9px;
+  }
+  .setting-box label { margin: 0; font-size: .72rem; text-align: center; display: flex; align-items: center; justify-content: center; gap: 4px; }
+  .setting-box input[type="number"] { background: transparent; border: none; padding: 0; font-size: 1.4rem; font-weight: 900; text-align: center; }
+
+  /* ---- Game settings: boolean toggle ---- */
+  .toggle-row {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    background: var(--surface2); border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm); padding: 13px 16px; margin-bottom: 9px; cursor: pointer;
+  }
+  .toggle-label { font-size: .9rem; font-weight: 700; color: var(--text); }
+  .toggle-sub   { font-size: .74rem; color: var(--text-dim); margin-top: 2px; font-weight: 600; text-transform: none; letter-spacing: 0; }
+  .toggle-switch {
+    position: relative; width: 46px; height: 27px; flex-shrink: 0;
+    background: var(--border); border-radius: 14px; cursor: pointer;
+    transition: background .2s; border: none; padding: 0;
+  }
+  .toggle-switch.on { background: var(--green); }
+  .toggle-switch::after {
+    content: ''; position: absolute; top: 3px; right: 3px;
+    width: 21px; height: 21px; border-radius: 50%; background: #fff;
+    transition: transform .2s;
+  }
+  .toggle-switch.on::after { transform: translateX(-19px); }
+
+  /* ---- Advanced settings accordion ---- */
+  .settings-toggle-header {
+    width: 100%; display: flex; align-items: center; justify-content: space-between;
+    background: var(--surface2); border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+    padding: 14px 16px; cursor: pointer; font-family: 'Heebo', sans-serif; color: var(--text);
+    font-size: .92rem; font-weight: 700; transition: border-color .15s;
+  }
+  .settings-toggle-header:active { filter: brightness(.9); }
+  .settings-toggle-header span { display: flex; align-items: center; gap: 7px; }
+  .settings-chevron { transition: transform .25s ease; font-size: 1.2rem; width: 1.2rem; height: 1.2rem; color: var(--text-dim); }
+  .settings-chevron.open { transform: rotate(180deg); }
+
+  .advanced-settings-content {
+    overflow: hidden; max-height: 0; transition: max-height .28s ease, margin-top .28s ease;
+    margin-top: 0;
+  }
+  .advanced-settings-content.open { max-height: 500px; margin-top: 10px; }
+
   /* ===== SCREEN 2: REVEAL ===== */
   #screen-reveal {
     justify-content: center; padding: 24px 24px max(28px, env(safe-area-inset-bottom));
@@ -383,6 +431,36 @@
     </select>
   </div>
 
+  <div class="form-section" style="margin-bottom:22px">
+    <button type="button" class="settings-toggle-header" onclick="toggleAdvancedSettings()">
+      <span><iconify-icon icon="mdi:cog-outline"></iconify-icon> הגדרות משחק נוספות</span>
+      <iconify-icon icon="mdi:chevron-down" class="settings-chevron" id="adv-settings-chevron"></iconify-icon>
+    </button>
+
+    <div class="advanced-settings-content" id="advanced-settings-content">
+      <div class="setting-box">
+        <label><iconify-icon icon="mdi:spy" style="font-size:.82rem;width:.82rem;height:.82rem"></iconify-icon> כמות מתחזים</label>
+        <input type="number" id="num-imposters" value="1" min="1" max="3" step="1">
+      </div>
+
+      <div class="toggle-row" onclick="toggleSetting('hint')">
+        <div>
+          <div class="toggle-label">רמז למתחזה</div>
+          <div class="toggle-sub">המתחזה יראה את הקטגוריה</div>
+        </div>
+        <button type="button" class="toggle-switch on" id="toggle-hint"></button>
+      </div>
+
+      <div class="toggle-row" onclick="toggleSetting('noFirst')">
+        <div>
+          <div class="toggle-label">מתחזה לא ראשון</div>
+          <div class="toggle-sub">המתחזה לא יפתח את הדיון</div>
+        </div>
+        <button type="button" class="toggle-switch on" id="toggle-noFirst"></button>
+      </div>
+    </div>
+  </div>
+
   <div style="width:100%">
     <button type="button" class="btn btn-primary" onclick="startGame()">
       <iconify-icon icon="mdi:spy"></iconify-icon> התחל משחק!
@@ -479,7 +557,7 @@
 
   <div class="result-info" style="width:100%">
     <div class="result-row">
-      <span class="result-row-label">המתחזה היה</span>
+      <span class="result-row-label" id="ri-imposter-label">המתחזה היה</span>
       <span class="result-row-value" id="ri-imposter" style="color:var(--red)">—</span>
     </div>
     <div class="result-row">
@@ -505,42 +583,98 @@ const CATEGORIES = {
   'חיות': [
     'כלב','חתול','אריה','פיל','קוף',"ג'ירפה",'זברה','דולפין','נשר','ארנב',
     'חמור','פרה','עז','ברווז','תרנגול','נמר','דוב','כריש','צפרדע','צב',
-    'פינגווין','נחש','תוכי','חזיר','פרפר','נמלה','חיפושית','כבשה','גמל','אייל'
+    'פינגווין','נחש','תוכי','חזיר','פרפר','נמלה','חיפושית','כבשה','גמל','אייל',
+    'סוס','עכבר','שועל','זאב','קיפוד','סנאי','תנין','לווייתן','כלב ים','קרנף',
+    'היפופוטם','עטלף','יונה','עורב','ינשוף','טווס','אפרוח','גור','ברווזון','טלה',
+    'דבורה','זבוב','יתוש','עכביש','שבלול','תולעת','דג','דג זהב','תמנון','מדוזה',
+    'סרטן','כוכב ים','פנדה','קוואלה','קנגורו','למה','עצלן','ברבור','אווז','חסידה',
+    'פלמינגו','יען','פרת משה רבנו','זחל','סוס ים','זיקית','לטאה','תרנגולת','גדי','סייח',
+    'לביאה','שימפנזה','גורילה','נמרה','דובה','שועלון','זאבון','חתלתול','כלבלב','דינוזאור',
+    'ברדלס','אריה ים','נחליאלי','דוכיפת','חגב','צרעה','שפנפן','חפרפרת','סוריקטה','שלדג'
   ],
   'מאכלים': [
     'פיצה','המבורגר','סושי','פסטה','שווארמה','פלאפל','גלידה','עוגה','שוקולד','בורקס',
     'פיתה','עוף','סלמון','חומוס','מרק','לחם','אורז','ביצה','גבינה','עגבנייה',
-    'בננה','תפוח','ענבים','אבוקדו','גזר','פסטה','לאגנה','קרפ','וופל','דונאט'
+    'בננה','תפוח','ענבים','אבוקדו','גזר','קרקר','לאגנה','קרפ','וופל','דונאט',
+    'מלווח','ג\'חנון','קוסקוס','סטייק','נקניקייה','צ\'יפס','שקשוקה','חביתה','סלט','טונה',
+    'טחינה','ממולאים','פנקייק','מאפינס','קרואסון','בייגל','טוסט','שניצל','פירה','חציל',
+    'פשטידה','נקניק','קציצה','קבב','שישליק','טאקו','בוריטו','נאצ\'וס','חלה','בגט',
+    'טורטייה','יוגורט','חמאה','שמנת','מלפפון','בצל','תפוח אדמה','בטטה','פלפל','שום',
+    'תירס','אפונה','שעועית','תות','תפוז','קלמנטינה','אפרסק','משמש','שזיף','אבטיח',
+    'מלון','מנגו','אננס','תמר','אגוז','שקד','בוטנים','דבש','ריבה','קורנפלקס',
+    'שוקו','חלב','סוכרייה','מסטיק','פופקורן','וופלה','פטיבר','מעדן','קטשופ','זיתים'
   ],
   'חפצים בבית': [
     'כיסא','שולחן','מקרר','תנור','מיטה','ספה','טלוויזיה','מנורה','מראה','שטיח',
     'ארון','כרית','שמיכה','מיקרוגל','כוס','מחשב','מדף','דלת','חלון','מטאטא',
-    'ברז','כיור','מגבת','סכין','מצלמה','שעון','אוזניות','מרפסת','קולב','מזוודה'
+    'ברז','כיור','מגבת','סכין','מצלמה','שעון','אוזניות','מרפסת','קולב','מזוודה',
+    'מזלג','כף','כפית','צלחת','קערה','סיר','מחבת','קומקום','בלנדר','מזגן',
+    'שלט','טלפון','מטען','סוללה','ספר','מחברת','עיפרון','עט','מספריים','סבון',
+    'שמפו','משחת שיניים','מברשת שיניים','מברשת שיער','מסרק','בושם','קרם','עציץ','תמונה','וילון',
+    'תריס','מפתח','מנעול','ארנק','משקפיים','פנס','מטרייה','סולם','פטיש','מברג',
+    'מסמר','ברגים','צינור','אמבטיה','אסלה','שידה','שולחן כתיבה','פוף','שרפרף','מזרון',
+    'סדין','שטיחון','צעצוע','בובה','משחק','פאזל','קוביות','טוש','צבע','קלמר',
+    'ילקוט','תיק','מדבקה','כדור','פלסטר','נייר','לוח','שעון קיר','מגהץ','פח אשפה'
   ],
   'מדינות': [
     'ישראל','ברזיל','יפן','צרפת','איטליה','גרמניה','אוסטרליה','קנדה','הודו','ספרד',
     'מקסיקו','רוסיה','סין','בריטניה','פורטוגל','תורכיה','ארגנטינה','מרוקו','פולין','שוודיה',
-    'נורווגיה','אוסטריה','שווייץ','בלגיה','הולנד','יוון','מצרים','דרום אפריקה','קוריאה','אירלנד'
+    'נורווגיה','אוסטריה','שווייץ','בלגיה','הולנד','יוון','מצרים','דרום אפריקה','קוריאה','אירלנד',
+    'ארצות הברית','אנגליה','סקוטלנד','ויילס','תאילנד','ניו זילנד','קפריסין','ירדן','לבנון','סוריה',
+    'איראן','עיראק','ערב הסעודית','איחוד האמירויות','מדגסקר','קניה','אתיופיה','ג\'מייקה','קובה','פנמה',
+    'קוסטה ריקה','קולומביה','פרו','צ\'ילה','אורוגוואי','אוקראינה','רומניה','הונגריה','צ\'כיה','בולגריה',
+    'פינלנד','דנמרק','איסלנד','קרואטיה','סינגפור','וייטנאם','פיליפינים','ניגריה','קטר','גאורגיה',
+    'מונקו','מלטה','סלובקיה','סרביה','ונצואלה','אקוודור','בוליביה','פרגוואי','גאנה','סנגל',
+    'טנזניה','לוב','תוניסיה','אלג\'יריה','תימן','פקיסטן','נפאל','מונגוליה','ארמניה','לוקסמבורג',
+    'גואטמלה','הונדורס','אל סלוודור','אינדונזיה','מלזיה','סרי לנקה','מלדיביים','קמבודיה','אלבניה','עומאן'
   ],
   'מקצועות': [
     'רופא','מורה','שוטר','טבח','עורך דין','מהנדס','אדריכל','פסיכולוג','טייס','שחקן',
     'זמר','נהג','ספר','עיתונאי','פוליטיקאי','רופא שיניים','מכונאי','כלכלן','מאמן','כבאי',
-    'חייל','גנן','חקלאי','מלצר','צלם','מתכנת','אחות','ספן','אסטרונאוט','פסל'
+    'חייל','גנן','חקלאי','מלצר','צלם','מתכנת','אחות','ספן','אסטרונאוט','פסל',
+    'נגר','חשמלאי','אינסטלטור','טכנאי','רוקח','וטרינר','מדען','חוקר','סופר','צייר',
+    'במאי','רקדן','מוזיקאי','מלחין','מנצח','בנקאי','מנהל','מזכירה','קופאי','מוכר',
+    'שליח','דוור','מנקה','שומר','מאבטח','בלש','שופט','ספרן','דייל','קברניט',
+    'מלח','צוללן','בנאי','צבע','תופר','חייט','דוגמן','מאפר','קוסם','ליצן',
+    'גננת','סייעת','כדורגלן','כדורסלן','שחיין','מציל','אופה','קונדיטור','יוטיובר','גיימר',
+    'נהג מונית','נהג אוטובוס','דייג','רועה צאן','פקח','שומר ראש','בייביסיטר','מטפלת','מדריך קייטנה','ליצן רפואי',
+    'מדבב','מוסכניק','מחלק עיתונים','סוכן נסיעות','מדריך טיולים','מלביש','מאמן כושר','חובש','טכנאי מחשבים','מוכר גלידה'
   ],
   'ספורט': [
     'כדורגל','כדורסל','טניס','שחייה','גולף','סקי','אגרוף','התעמלות','רכיבה','כדור עף',
     'ריצה','אופניים','סקייטבורד','גלישה','כדוריד','קראטה','יוגה','שחמט','בדמינטון','רוגבי',
-    'פינג פונג','ג\'ודו','גלגיליות','טריאתלון','ירייה','סיוף','פולו','צלילה','קפיצה למים','אמנות לחימה'
+    'פינג פונג','ג\'ודו','גלגיליות','טריאתלון','ירייה','סיוף','פולו','צלילה','קפיצה למים','אמנות לחימה',
+    'פוטבול','בייסבול','הוקי','הוקי קרח','כדורמים','באולינג','ביליארד','חץ וקשת','קפיצה לגובה','קפיצה לרוחק',
+    'מרתון','מרוץ מכשולים','מרוץ שליחים','אירובי','זומבה','הרמת משקולות','היאבקות','קיקבוקסינג','טקוואנדו','קפוארה',
+    'קרב מגע','מרוץ מכוניות','מרוץ אופנועים','שיט','חתירה','קיאקים','גלישת רוח','גלישת גלים','סנובורד','החלקה על הקרח',
+    'החלקה אמנותית','טיפוס קירות','טיפוס הרים','צניחה חופשית','מרוץ סוסים','מחניים','תופסת','מחבואים','קלאס','חבל קפיצה',
+    'קורקינט','טרמפולינה','כדורשת','סטנגה','גומי','חמש אבנים','דג מלוח','משיכת חבל','הורדת ידיים','קרב כריות',
+    'ים יבשה','כיסאות מוזיקליים','קליעה למטרה','גלגלון','עמידת ידיים','עמידת ראש','שפגט','כדורגל שולחן','הוקי אוויר','אקרובטיקה',
+    'ג\'אגלינג','מסירות','מיני גולף','רכיבה על פוני','שחייה צורנית','אופני הרים','אופני פעלולים','ריצת משוכות','הליכה','קפיצה בחבל'
   ],
   'טבע': [
     'הר','ים','מדבר','יער','נהר','אגם','מפל','מערה','חוף','אי',
     'ענן','שלג','ברק','גשם','שמש','כוכב','ירח','רוח','פרח','עץ',
-    'עלה','חול','קרח','גל','בוץ','ריף','בצה','שיח','מולקנו','צונאמי'
+    'עלה','חול','קרח','גל','בוץ','ריף','בצה','שיח','מולקנו','צונאמי',
+    'גבעה','עמק','צוק','נחל','מעיין','שלולית','אוקיינוס','מפרץ','קרחון','ברד',
+    'סופה','סערה','טורנדו','הוריקן','רעידת אדמה','ליקוי חמה','ליקוי ירח','מטאור','אסטרואיד','גלקסיה',
+    'שמיים','אופק','אדמה','סלע','אבן','חלוק נחל','חצץ','עפר','לבה','אפר',
+    'קשת בענן','ערפל','חמסין','שרב','שורש','גזע','ענף','ניצן','זרע','פרי',
+    'דשא','פטריה','אצה','אלמוג','קונכייה','צדף','פנינה','ג\'ונגל','שדה','מישור',
+    'סוואנה','חורש','קניון','מצוק','שקיעה','זריחה','חושך','אור','שתיל','בוסתן',
+    'כרם','פרדס','חממה','אדנית','נביעה','מערת נטיפים','אבן חול','הר געש','שביל','צמח'
   ],
   'סרטים': [
     'גיבור','נבל','ריגול','אנימציה','אימה','קומדיה','דרמה','מדע בדיוני','תיעודי','סדרה',
     'בימאי','אוסקר','טריילר','פופקורן','קולנוע','עריכה','תסריט','פסקול','אקשן','פנטזיה',
-    'רובוט','חייזר','ריגול','מסכה','בובה','רוח רפאים','פרס','מחיאות','ביקורת','הצגה'
+    'רובוט','חייזר','תחפושת','מסכה','בובה','רוח רפאים','פרס','מחיאות','ביקורת','הצגה',
+    'שחקן','צלם','מלביש','תפאורה','אפקטים','מסך ירוק','אולפן','מיקרופון','סאונד','סצנה',
+    'צילומים','הקרנה','כרטיס','אולם','מושב','מסך','מקרן','מתח','אהבה','אגדה',
+    'סיפור','גיבורה','הרפתקאות','נסיך','מדבב','דיבוב','תרגום','שטיח אדום','גביע','מדליה',
+    'זכייה','חגיגה','הצלחה','פוסטר','פרומו','צופים','קהל','עלילה','סרט','שיר',
+    'מוזיקה','כוכב','שלט','טלוויזיה','מצויר','גיבור על','נסיכה','מלך','מלכה','קסם',
+    'מצחיק','מפחיד','חברים','משפחה','צחוק','דמעות','סוף','התחלה','חטיף','שתייה',
+    'פנס','כיבוד','ממתק','סוכרייה','מצלמה','מחשב','וידאו','יוטיוב','טלפון','סלולרי'
   ],
 };
 
@@ -548,12 +682,14 @@ const CATEGORIES = {
 const G = {
   players:          [],
   numPlayers:       4,
-  imposterIndex:    -1,
+  imposterIndices:  [],
   secretWord:       '',
   category:         '',
   currentReveal:    0,
   roleVisible:      false,
   votedPlayer:      -1,
+  hintEnabled:      true,
+  noFirstEnabled:   true,
 };
 
 // ============================= INIT =============================
@@ -571,6 +707,36 @@ function onNumPlayersChange() {
       <input type="text" id="pname-${i}" placeholder="שחקן ${i + 1}" maxlength="18">`;
     grid.appendChild(row);
   }
+
+  // Changing player count resets the game settings to their defaults,
+  // since imposter count / hint / order rules depend on player count.
+  const impInput = document.getElementById('num-imposters');
+  impInput.max   = Math.max(1, n - 1);
+  impInput.value = 1;
+  setToggle('hint', true);
+  setToggle('noFirst', true);
+}
+
+// ============================= SETTINGS TOGGLES =============================
+function setToggle(key, value) {
+  if (key === 'hint')    G.hintEnabled    = value;
+  if (key === 'noFirst') G.noFirstEnabled = value;
+  const btn = document.getElementById(`toggle-${key}`);
+  if (btn) btn.classList.toggle('on', value);
+}
+
+function toggleSetting(key) {
+  const current = key === 'hint' ? G.hintEnabled : G.noFirstEnabled;
+  setToggle(key, !current);
+  vibrate([20]);
+}
+
+// ============================= ADVANCED SETTINGS ACCORDION =============================
+let _advSettingsOpen = false;
+function toggleAdvancedSettings() {
+  _advSettingsOpen = !_advSettingsOpen;
+  document.getElementById('advanced-settings-content').classList.toggle('open', _advSettingsOpen);
+  document.getElementById('adv-settings-chevron').classList.toggle('open', _advSettingsOpen);
 }
 
 // ============================= START =============================
@@ -590,7 +756,13 @@ function startGame() {
   }
   G.category    = cat;
   G.secretWord  = pickRandom(CATEGORIES[cat]);
-  G.imposterIndex = ~~(Math.random() * n);
+
+  // Choose imposters (clamped 1..n-1, so at least one citizen always knows the word)
+  let numImp = parseInt(document.getElementById('num-imposters').value) || 1;
+  numImp = Math.max(1, Math.min(numImp, n - 1));
+  const shuffledIdx = shuffle([...Array(n).keys()]);
+  G.imposterIndices = shuffledIdx.slice(0, numImp).sort((a, b) => a - b);
+
   G.currentReveal = 0;
   G.roleVisible   = false;
   G.votedPlayer   = -1;
@@ -639,7 +811,7 @@ function renderReveal(idx) {
 
 function tapToReveal() {
   G.roleVisible = true;
-  const isImposter = G.currentReveal === G.imposterIndex;
+  const isImposter = G.imposterIndices.includes(G.currentReveal);
 
   // Update icon (static, no bounce)
   const iconEl = document.getElementById('reveal-icon');
@@ -657,6 +829,7 @@ function tapToReveal() {
     card.innerHTML = `
       <div style="font-size:2.8rem">🕵️</div>
       <div class="role-label" style="color:var(--red)">אתה המתחזה!</div>
+      ${G.hintEnabled ? `<div class="role-cat">רמז — קטגוריה: ${G.category}</div>` : ''}
       <div class="role-desc">נסה להשתלב ולא להיתפס.<br>אין לך מושג מה המילה הסודית — <strong style="color:var(--red)">תאלתר!</strong></div>`;
   } else {
     card.className = 'role-card citizen';
@@ -689,12 +862,30 @@ function acknowledgeReveal() {
 }
 
 // ============================= DISCUSSION =============================
+// Builds the speaking order. When "imposter not first" is enabled, a random
+// citizen is guaranteed to occupy position 0 — the rest (remaining citizens +
+// all imposters) are shuffled together for positions 1..n-1.
+function buildSpeakingOrder() {
+  const all       = [...Array(G.numPlayers).keys()];
+  const citizens  = all.filter(i => !G.imposterIndices.includes(i));
+  const imposters = all.filter(i => G.imposterIndices.includes(i));
+
+  if (G.noFirstEnabled && citizens.length > 0) {
+    const shuffledCitizens = shuffle([...citizens]);
+    const first = shuffledCitizens[0];
+    const rest  = shuffle([...shuffledCitizens.slice(1), ...imposters]);
+    return [first, ...rest];
+  }
+
+  return shuffle([...citizens, ...imposters]);
+}
+
 function showDiscussion() {
   const HELP = helpBtn();
   setHeader(true, HELP);
 
-  // Randomize speaking order
-  const order = shuffle([...Array(G.numPlayers).keys()]);
+  const order = buildSpeakingOrder();
+
   document.getElementById('discussion-list').innerHTML = order.map((pi, pos) => `
     <div class="player-row">
       <span class="pr-num">${pos + 1}</span>
@@ -731,17 +922,17 @@ function selectVote(idx) {
 
 function confirmVote() {
   if (G.votedPlayer < 0) return;
-  if (G.votedPlayer === G.imposterIndex) {
+  if (G.imposterIndices.includes(G.votedPlayer)) {
     showGuess();
   } else {
-    showResult(true, false); // imposter wins — wrong citizen voted out
+    showResult(true, false); // imposter(s) win — wrong citizen voted out
   }
 }
 
 // ============================= GUESS =============================
 function showGuess() {
   setHeader(false);
-  const impName = G.players[G.imposterIndex];
+  const impName = G.players[G.votedPlayer];
   document.getElementById('guess-sub').innerHTML =
     `<strong>${impName}</strong>, תפסו אותך!<br>נחש את המילה הסודית — ונצח!`;
 
@@ -772,14 +963,15 @@ function showResult(imposterWon, guessAttempted) {
 
   const crownEl = document.getElementById('result-crown');
   const nameEl  = document.getElementById('result-name');
+  const multi   = G.imposterIndices.length > 1;
 
   if (imposterWon) {
     crownEl.textContent = '🕵️';
     if (guessAttempted) {
-      nameEl.innerHTML = `<span style="color:var(--red)">המתחזה ניחש וניצח!</span>`;
+      nameEl.innerHTML = `<span style="color:var(--red)">${multi ? 'אחד המתחזים ניחש וניצח!' : 'המתחזה ניחש וניצח!'}</span>`;
     } else {
       const wrongName = G.players[G.votedPlayer];
-      nameEl.innerHTML = `<span style="color:var(--red)">המתחזה ניצח!</span>
+      nameEl.innerHTML = `<span style="color:var(--red)">${multi ? 'המתחזים ניצחו!' : 'המתחזה ניצח!'}</span>
         <div style="font-size:1.1rem;color:var(--text-dim);margin-top:6px;font-weight:700">הצבעתם על ${wrongName} — אזרח תמים 😅</div>`;
     }
     vibrate([500]);
@@ -790,9 +982,10 @@ function showResult(imposterWon, guessAttempted) {
     vibrate([200, 100, 200, 100, 400]);
   }
 
-  document.getElementById('ri-imposter').textContent  = G.players[G.imposterIndex];
-  document.getElementById('ri-word').textContent      = G.secretWord;
-  document.getElementById('ri-category').textContent  = G.category;
+  document.getElementById('ri-imposter-label').textContent = multi ? 'המתחזים היו' : 'המתחזה היה';
+  document.getElementById('ri-imposter').textContent = G.imposterIndices.map(i => G.players[i]).join(', ');
+  document.getElementById('ri-word').textContent     = G.secretWord;
+  document.getElementById('ri-category').textContent = G.category;
 
   showScreen('screen-result');
 }
