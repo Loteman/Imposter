@@ -57,6 +57,7 @@
     transition: transform .1s, filter .1s;
   }
   .header-btn:active { transform: scale(.94); filter: brightness(.85); }
+  .header-btn:hover, .header-btn:active { border-color: var(--yellow); }
 
   /* ===== SCREEN SYSTEM ===== */
   .screen {
@@ -76,6 +77,7 @@
     cursor: pointer; transition: transform .12s, filter .12s; letter-spacing: 0.3px;
   }
   .btn:active { transform: scale(.96); filter: brightness(.88); }
+  .btn:hover, .btn:active { outline: 2px solid var(--yellow); outline-offset: 2px; }
   .btn-primary { background: var(--yellow); color: #0d0d14; }
   .btn-green   { background: var(--green);  color: #fff; }
   .btn-red     { background: var(--red);    color: #fff; }
@@ -92,6 +94,14 @@
   }
   input:focus, select:focus { border-color: var(--yellow); }
   select option { background: var(--surface2); }
+  select {
+    appearance: none; -webkit-appearance: none; -moz-appearance: none;
+    padding-left: 40px;
+    background-repeat: no-repeat;
+    background-position: left 14px center;
+    background-size: 15px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>");
+  }
 
   /* ===== SCREEN 1: START ===== */
   #screen-start { padding: 20px 20px 44px; gap: 0; background: var(--bg); }
@@ -111,12 +121,64 @@
   .player-input-row {
     display: flex; align-items: center; gap: 10px;
     background: var(--surface2); border: 1.5px solid var(--border);
-    border-radius: var(--radius-sm); padding: 5px 14px; transition: border-color .2s;
+    border-radius: var(--radius-sm); padding: 5px 14px;
+    position: relative; transition: transform .18s ease, border-color .2s;
   }
   .player-input-row:focus-within { border-color: var(--yellow); }
   .player-num { font-size: .85rem; font-weight: 700; color: var(--text-dim); min-width: 22px; }
   .player-input-row input { background: transparent; border: none; padding: 10px 0; font-size: 1rem; flex: 1; }
   .player-input-row input:focus { border: none; }
+
+  .drag-handle {
+    display: flex; align-items: center; justify-content: center;
+    width: 26px; height: 26px; flex-shrink: 0; color: var(--text-dim);
+    cursor: grab; touch-action: none; border-radius: 6px; margin: -5px 0 -5px -10px;
+  }
+  .drag-handle:active { cursor: grabbing; color: var(--yellow); }
+  .drag-handle iconify-icon { font-size: 1.35rem; width: 1.35rem; height: 1.35rem; }
+
+  .player-input-row.dragging {
+    z-index: 30; border-color: var(--yellow); box-shadow: 0 8px 20px rgba(0,0,0,.5);
+    transition: none; background: var(--surface);
+  }
+
+  /* ---- Players card: compact chips view + editable accordion ---- */
+  .players-card {
+    width: 100%; background: var(--surface2); border: 1.5px solid var(--border);
+    border-radius: var(--radius); padding: 14px 16px;
+  }
+  .players-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+  .players-edit-btn {
+    display: flex; align-items: center; gap: 5px; flex-shrink: 0;
+    background: var(--surface); border: 1.5px solid var(--border); border-radius: 9px;
+    padding: 6px 11px; color: var(--text); font-family: 'Heebo', sans-serif;
+    font-size: .8rem; font-weight: 700; cursor: pointer;
+    transition: filter .1s, border-color .15s, color .15s;
+  }
+  .players-edit-btn:active { filter: brightness(.85); }
+  .players-edit-btn:hover, .players-edit-btn:active { border-color: var(--yellow); }
+  .players-edit-chevron { font-size: .95rem; width: .95rem; height: .95rem; transition: transform .25s ease; }
+  .players-edit-chevron.open { transform: rotate(180deg); }
+
+  .players-chips { display: flex; flex-wrap: wrap; gap: 7px; flex: 1; }
+  .player-chip {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 20px;
+    padding: 7px 13px; font-size: .85rem; font-weight: 700; color: var(--text);
+    display: flex; align-items: center; gap: 6px; max-width: 100%;
+    cursor: pointer; transition: filter .1s, transform .1s, border-color .15s;
+  }
+  .player-chip:active { transform: scale(.95); filter: brightness(.85); }
+  .player-chip:hover { border-color: var(--yellow); }
+  .player-chip .chip-num { color: var(--text-dim); font-weight: 900; font-size: .76rem; flex-shrink: 0; }
+  .player-chip .chip-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 160px; }
+
+  .players-edit-content {
+    overflow: hidden; max-height: 0; transition: max-height .28s ease, margin-top .28s ease;
+    margin-top: 0;
+  }
+  .players-edit-content.open { max-height: 280px; margin-top: 12px; overflow-y: auto; padding-left: 2px; }
+
+  .player-input-row.highlight-row { border-color: var(--yellow); box-shadow: 0 0 0 3px rgba(250,204,21,.18); }
 
   .home-footer {
     width: 100%; display: flex; align-items: center; justify-content: center;
@@ -146,7 +208,9 @@
     display: flex; align-items: center; justify-content: space-between; gap: 12px;
     background: var(--surface2); border: 1.5px solid var(--border);
     border-radius: var(--radius-sm); padding: 13px 16px; margin-bottom: 9px; cursor: pointer;
+    transition: border-color .15s;
   }
+  .toggle-row:hover, .toggle-row:active { border-color: var(--yellow); }
   .toggle-label { font-size: .9rem; font-weight: 700; color: var(--text); }
   .toggle-sub   { font-size: .74rem; color: var(--text-dim); margin-top: 2px; font-weight: 600; text-transform: none; letter-spacing: 0; }
   .toggle-switch {
@@ -166,10 +230,11 @@
   .settings-toggle-header {
     width: 100%; display: flex; align-items: center; justify-content: space-between;
     background: var(--surface2); border: 1.5px solid var(--border); border-radius: var(--radius-sm);
-    padding: 14px 16px; cursor: pointer; font-family: 'Heebo', sans-serif; color: var(--text);
-    font-size: .92rem; font-weight: 700; transition: border-color .15s;
+    padding: 14px 16px 14px 14px; cursor: pointer; font-family: 'Heebo', sans-serif; color: var(--text);
+    font-size: .92rem; font-weight: 700; transition: border-color .15s, outline-color .15s;
   }
   .settings-toggle-header:active { filter: brightness(.9); }
+  .settings-toggle-header:hover, .settings-toggle-header:active { border-color: var(--yellow); }
   .settings-toggle-header span { display: flex; align-items: center; gap: 7px; }
   .settings-chevron { transition: transform .25s ease; font-size: 1.2rem; width: 1.2rem; height: 1.2rem; color: var(--text-dim); }
   .settings-chevron.open { transform: rotate(180deg); }
@@ -254,6 +319,7 @@
     text-align: right;
   }
   .vote-btn:active { transform: scale(.97); }
+  .vote-btn:not(.selected):hover, .vote-btn:not(.selected):active { border-color: var(--yellow); }
   .vote-btn.selected { border-color: var(--red); background: rgba(239,68,68,.09); }
   .vb-num   { font-size: .82rem; font-weight: 700; color: var(--text-dim); min-width: 18px; }
   .vb-name  { font-size: 1.05rem; font-weight: 700; flex: 1; }
@@ -361,7 +427,7 @@
     border-radius: 12px; padding: 14px 16px; margin-bottom: 10px;
     text-decoration: none; color: var(--text); transition: border-color .15s;
   }
-  .about-link:active { border-color: var(--yellow); }
+  .about-link:hover, .about-link:active { border-color: var(--yellow); }
   .about-link-label { font-size: .95rem; font-weight: 700; }
   .about-link-sub   { font-size: .78rem; color: var(--text-dim); margin-top: 2px; }
   .about-tm { text-align: center; font-size: .78rem; color: var(--text-dim); margin-top: 18px; line-height: 1.6; }
@@ -413,7 +479,19 @@
 
   <div class="form-section" style="margin-bottom:12px">
     <label><iconify-icon icon="mdi:account-outline" style="font-size:.82rem;width:.82rem;height:.82rem"></iconify-icon> שמות שחקנים</label>
-    <div class="players-grid" id="player-inputs"></div>
+    <div class="players-card">
+      <div class="players-card-header">
+        <div class="players-chips" id="players-chips"></div>
+        <button type="button" class="players-edit-btn" id="players-edit-toggle" onclick="togglePlayersEdit()">
+          <iconify-icon icon="mdi:pencil-outline"></iconify-icon> ערוך
+          <iconify-icon icon="mdi:chevron-down" class="players-edit-chevron" id="players-edit-chevron"></iconify-icon>
+        </button>
+      </div>
+
+      <div class="players-edit-content" id="players-edit-content">
+        <div class="players-grid" id="player-inputs"></div>
+      </div>
+    </div>
   </div>
 
   <div class="form-section" style="margin-bottom:22px">
@@ -432,7 +510,8 @@
   </div>
 
   <div class="form-section" style="margin-bottom:22px">
-    <button type="button" class="settings-toggle-header" onclick="toggleAdvancedSettings()">
+    <label><iconify-icon icon="mdi:tune-variant" style="font-size:.82rem;width:.82rem;height:.82rem"></iconify-icon> הגדרות</label>
+    <button type="button" class="settings-toggle-header" id="settings-toggle-header" onclick="toggleAdvancedSettings()">
       <span><iconify-icon icon="mdi:cog-outline"></iconify-icon> הגדרות משחק נוספות</span>
       <iconify-icon icon="mdi:chevron-down" class="settings-chevron" id="adv-settings-chevron"></iconify-icon>
     </button>
@@ -456,7 +535,7 @@
           <div class="toggle-label">מתחזה לא ראשון</div>
           <div class="toggle-sub">המתחזה לא יפתח את הדיון</div>
         </div>
-        <button type="button" class="toggle-switch on" id="toggle-noFirst"></button>
+        <button type="button" class="toggle-switch" id="toggle-noFirst"></button>
       </div>
     </div>
   </div>
@@ -689,7 +768,7 @@ const G = {
   roleVisible:      false,
   votedPlayer:      -1,
   hintEnabled:      true,
-  noFirstEnabled:   true,
+  noFirstEnabled:   false,
 };
 
 // ============================= INIT =============================
@@ -698,15 +777,7 @@ document.addEventListener('DOMContentLoaded', onNumPlayersChange);
 function onNumPlayersChange() {
   const n = parseInt(document.getElementById('num-players').value);
   G.numPlayers = n;
-  const grid = document.getElementById('player-inputs');
-  grid.innerHTML = '';
-  for (let i = 0; i < n; i++) {
-    const row = document.createElement('div');
-    row.className = 'player-input-row';
-    row.innerHTML = `<span class="player-num">${i + 1}</span>
-      <input type="text" id="pname-${i}" placeholder="שחקן ${i + 1}" maxlength="18">`;
-    grid.appendChild(row);
-  }
+  rebuildPlayerRows(new Array(n).fill(''));
 
   // Changing player count resets the game settings to their defaults,
   // since imposter count / hint / order rules depend on player count.
@@ -714,7 +785,151 @@ function onNumPlayersChange() {
   impInput.max   = Math.max(1, n - 1);
   impInput.value = 1;
   setToggle('hint', true);
-  setToggle('noFirst', true);
+  setToggle('noFirst', false);
+}
+
+// ============================= PLAYERS CARD (chips + edit accordion) =============================
+function escapeHtml(s) {
+  return (s || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// Rebuilds the editable player-name rows from a values array, re-attaching
+// drag handles and refreshing the chip summary. Used on init, on player-count
+// change, and after a drag-reorder completes.
+function rebuildPlayerRows(values) {
+  const grid = document.getElementById('player-inputs');
+  grid.innerHTML = '';
+  values.forEach((val, i) => {
+    const row = document.createElement('div');
+    row.className = 'player-input-row';
+    row.innerHTML = `
+      <span class="player-num">${i + 1}</span>
+      <input type="text" id="pname-${i}" placeholder="שחקן ${i + 1}" maxlength="18" value="${escapeHtml(val)}" oninput="updatePlayerChips()">
+      <span class="drag-handle" title="גרור לשינוי סדר"><iconify-icon icon="mdi:drag-vertical"></iconify-icon></span>`;
+    grid.appendChild(row);
+    initRowDrag(row);
+  });
+  updatePlayerChips();
+}
+
+function updatePlayerChips() {
+  const chipsEl = document.getElementById('players-chips');
+  chipsEl.innerHTML = '';
+  for (let i = 0; i < G.numPlayers; i++) {
+    const input = document.getElementById(`pname-${i}`);
+    const val   = input ? input.value.trim() : '';
+    const chip  = document.createElement('div');
+    chip.className = 'player-chip';
+    chip.onclick = () => focusPlayerEdit(i);
+    chip.innerHTML = `<span class="chip-num">${i + 1}</span><span class="chip-name">${val || `שחקן ${i + 1}`}</span>`;
+    chipsEl.appendChild(chip);
+  }
+}
+
+// ---- Drag-to-reorder (Pointer Events, works for mouse + touch) ----
+let _drag = null;
+const ROW_GAP = 9; // must match .players-grid { gap: 9px }
+
+function initRowDrag(row) {
+  const handle = row.querySelector('.drag-handle');
+  handle.addEventListener('pointerdown', (e) => startDrag(e, row, handle));
+}
+
+function startDrag(e, row, handle) {
+  e.preventDefault();
+  const activeInput = document.activeElement;
+  if (activeInput && activeInput.tagName === 'INPUT') activeInput.blur();
+
+  handle.setPointerCapture(e.pointerId);
+
+  const grid     = document.getElementById('player-inputs');
+  const rows     = Array.from(grid.querySelectorAll('.player-input-row'));
+  const rowHeight = row.offsetHeight + ROW_GAP;
+  const origIndex = rows.indexOf(row);
+
+  _drag = { grid, rows, row, origIndex, startY: e.clientY, rowHeight, targetSlot: origIndex, pointerId: e.pointerId, handle };
+
+  row.classList.add('dragging');
+
+  handle.addEventListener('pointermove', dragMove);
+  handle.addEventListener('pointerup', endDrag);
+  handle.addEventListener('pointercancel', endDrag);
+}
+
+function dragMove(e) {
+  if (!_drag) return;
+  const dy = e.clientY - _drag.startY;
+  _drag.row.style.transform = `translateY(${dy}px)`;
+
+  const n = _drag.rows.length;
+  const draggedCenter = _drag.origIndex * _drag.rowHeight + _drag.rowHeight / 2 + dy;
+  let targetSlot = Math.round((draggedCenter - _drag.rowHeight / 2) / _drag.rowHeight);
+  targetSlot = Math.max(0, Math.min(n - 1, targetSlot));
+  _drag.targetSlot = targetSlot;
+
+  _drag.rows.forEach((r, slot) => {
+    if (r === _drag.row) return;
+    let shift = 0;
+    if (_drag.origIndex < targetSlot && slot > _drag.origIndex && slot <= targetSlot) {
+      shift = -_drag.rowHeight;
+    } else if (_drag.origIndex > targetSlot && slot >= targetSlot && slot < _drag.origIndex) {
+      shift = _drag.rowHeight;
+    }
+    r.style.transform = shift ? `translateY(${shift}px)` : '';
+  });
+}
+
+function endDrag(e) {
+  if (!_drag) return;
+  const { rows, row, origIndex, targetSlot, handle, pointerId } = _drag;
+
+  handle.removeEventListener('pointermove', dragMove);
+  handle.removeEventListener('pointerup', endDrag);
+  handle.removeEventListener('pointercancel', endDrag);
+  try { handle.releasePointerCapture(pointerId); } catch (err) {}
+
+  row.classList.remove('dragging');
+  rows.forEach(r => { r.style.transform = ''; });
+
+  if (targetSlot !== origIndex) {
+    const values = rows.map(r => r.querySelector('input').value);
+    const moved  = values.splice(origIndex, 1)[0];
+    values.splice(targetSlot, 0, moved);
+    rebuildPlayerRows(values);
+    vibrate([25]);
+  }
+
+  _drag = null;
+}
+
+
+let _playersEditOpen = false;
+function togglePlayersEdit() {
+  _playersEditOpen = !_playersEditOpen;
+  document.getElementById('players-edit-content').classList.toggle('open', _playersEditOpen);
+  document.getElementById('players-edit-chevron').classList.toggle('open', _playersEditOpen);
+}
+
+// Tapping a player chip opens the edit panel (if closed) and jumps straight
+// to that player's input row, briefly highlighting it.
+function focusPlayerEdit(i) {
+  const wasOpen = _playersEditOpen;
+  if (!wasOpen) togglePlayersEdit();
+
+  const jumpToInput = () => {
+    const input = document.getElementById(`pname-${i}`);
+    if (!input) return;
+    input.focus();
+    input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    const row = input.closest('.player-input-row');
+    if (row) {
+      row.classList.add('highlight-row');
+      setTimeout(() => row.classList.remove('highlight-row'), 900);
+    }
+  };
+
+  // Wait for the open transition to finish before scrolling, if it was just opened
+  setTimeout(jumpToInput, wasOpen ? 30 : 300);
 }
 
 // ============================= SETTINGS TOGGLES =============================
