@@ -59,6 +59,18 @@
   .header-btn:active { transform: scale(.94); filter: brightness(.85); }
   .header-btn:hover, .header-btn:active { border-color: var(--yellow); }
 
+  /* Icon-only help button that floats top-left on the home screen (no header there) */
+  .home-help-btn {
+    position: fixed; top: 10px; left: 12px; z-index: 100;
+    background: var(--surface2); border: 1px solid var(--border); border-radius: 10px;
+    color: var(--text-dim); padding: 9px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: filter .1s, border-color .15s, color .15s;
+  }
+  .home-help-btn:active { filter: brightness(.85); }
+  .home-help-btn:hover, .home-help-btn:active { border-color: var(--yellow); color: var(--yellow); }
+  .home-help-btn iconify-icon { font-size: 1.1rem; width: 1.1rem; height: 1.1rem; }
+
   /* ===== SCREEN SYSTEM ===== */
   .screen {
     display: none; position: fixed; inset: 0;
@@ -147,24 +159,26 @@
     width: 100%; background: var(--surface2); border: 1.5px solid var(--border);
     border-radius: var(--radius); padding: 14px 16px;
   }
-  .players-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+  .players-card-header { display: flow-root; }
   .players-edit-btn {
-    display: flex; align-items: center; gap: 5px; flex-shrink: 0;
+    float: left; margin: 0 0 7px 7px;
+    display: flex; align-items: center; gap: 3px; flex-shrink: 0;
     background: var(--surface); border: 1.5px solid var(--border); border-radius: 9px;
-    padding: 6px 11px; color: var(--text); font-family: 'Heebo', sans-serif;
-    font-size: .8rem; font-weight: 700; cursor: pointer;
+    padding: 9px; color: var(--text); cursor: pointer;
     transition: filter .1s, border-color .15s, color .15s;
   }
   .players-edit-btn:active { filter: brightness(.85); }
   .players-edit-btn:hover, .players-edit-btn:active { border-color: var(--yellow); }
-  .players-edit-chevron { font-size: .95rem; width: .95rem; height: .95rem; transition: transform .25s ease; }
+  .players-edit-btn iconify-icon:first-child { font-size: 1rem; width: 1rem; height: 1rem; }
+  .players-edit-chevron { font-size: .85rem; width: .85rem; height: .85rem; transition: transform .25s ease; }
   .players-edit-chevron.open { transform: rotate(180deg); }
 
-  .players-chips { display: flex; flex-wrap: wrap; gap: 7px; flex: 1; }
+  .players-chips { direction: rtl; text-align: right; }
   .player-chip {
+    display: inline-flex; align-items: center; gap: 6px; max-width: 100%;
+    vertical-align: top; margin: 0 0 7px 7px;
     background: var(--surface); border: 1px solid var(--border); border-radius: 20px;
     padding: 7px 13px; font-size: .85rem; font-weight: 700; color: var(--text);
-    display: flex; align-items: center; gap: 6px; max-width: 100%;
     cursor: pointer; transition: filter .1s, transform .1s, border-color .15s;
   }
   .player-chip:active { transform: scale(.95); filter: brightness(.85); }
@@ -278,6 +292,7 @@
   .role-label { font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; }
   .role-word  { font-size: 2.6rem; font-weight: 900; letter-spacing: -1.5px; color: var(--green); line-height: 1.1; }
   .role-cat   { font-size: .8rem; color: var(--text-dim); font-weight: 700; }
+  .role-hint  { font-size: .95rem; font-weight: 900; color: var(--yellow); letter-spacing: .3px; }
   .role-desc  { font-size: .95rem; color: var(--text); line-height: 1.55; }
 
   /* ===== SCREEN 3: DISCUSSION ===== */
@@ -456,6 +471,11 @@
   <div id="info-content"></div>
 </div>
 
+<!-- Icon-only help button for the home screen (no header bar there) -->
+<button type="button" class="home-help-btn" id="home-help-btn" onclick="openInfo('rules')">
+  <iconify-icon icon="mdi:help-circle-outline"></iconify-icon>
+</button>
+
 <!-- ===== SCREEN 1: START ===== -->
 <div id="screen-start" class="screen active">
   <div class="logo">
@@ -481,11 +501,11 @@
     <label><iconify-icon icon="mdi:account-outline" style="font-size:.82rem;width:.82rem;height:.82rem"></iconify-icon> שמות שחקנים</label>
     <div class="players-card">
       <div class="players-card-header">
-        <div class="players-chips" id="players-chips"></div>
-        <button type="button" class="players-edit-btn" id="players-edit-toggle" onclick="togglePlayersEdit()">
-          <iconify-icon icon="mdi:pencil-outline"></iconify-icon> ערוך
+        <button type="button" class="players-edit-btn" id="players-edit-toggle" title="ערוך שמות שחקנים" onclick="togglePlayersEdit()">
+          <iconify-icon icon="mdi:pencil-outline"></iconify-icon>
           <iconify-icon icon="mdi:chevron-down" class="players-edit-chevron" id="players-edit-chevron"></iconify-icon>
         </button>
+        <div class="players-chips" id="players-chips"></div>
       </div>
 
       <div class="players-edit-content" id="players-edit-content">
@@ -558,7 +578,7 @@
 </div>
 
 <!-- ===== SCREEN 2: REVEAL (pass & play) ===== -->
-<div id="screen-reveal" class="screen">
+<div id="screen-reveal" class="screen has-header">
   <div class="reveal-progress" id="reveal-progress"></div>
 
   <div class="reveal-icon-wrap" id="reveal-icon">
@@ -618,7 +638,7 @@
 </div>
 
 <!-- ===== SCREEN 5: GUESS (imposter's last chance) ===== -->
-<div id="screen-guess" class="screen">
+<div id="screen-guess" class="screen has-header">
   <div class="guess-hd">
     <span class="guess-emoji">🕵️</span>
     <div class="guess-title">הזדמנות אחרונה!</div>
@@ -628,7 +648,7 @@
 </div>
 
 <!-- ===== SCREEN 6: RESULT ===== -->
-<div id="screen-result" class="screen">
+<div id="screen-result" class="screen has-header">
   <div class="confetti-area" id="confetti-area"></div>
   <span class="result-crown" id="result-crown">🎉</span>
   <div class="result-label">המנצחים</div>
@@ -982,7 +1002,7 @@ function startGame() {
   G.roleVisible   = false;
   G.votedPlayer   = -1;
 
-  setHeader(false);
+  setHeader(true, helpBtn());
   renderReveal(0);
 }
 
@@ -1044,7 +1064,7 @@ function tapToReveal() {
     card.innerHTML = `
       <div style="font-size:2.8rem">🕵️</div>
       <div class="role-label" style="color:var(--red)">אתה המתחזה!</div>
-      ${G.hintEnabled ? `<div class="role-cat">רמז — קטגוריה: ${G.category}</div>` : ''}
+      ${G.hintEnabled ? `<div class="role-hint">💡 רמז — קטגוריה: ${G.category}</div>` : ''}
       <div class="role-desc">נסה להשתלב ולא להיתפס.<br>אין לך מושג מה המילה הסודית — <strong style="color:var(--red)">תאלתר!</strong></div>`;
   } else {
     card.className = 'role-card citizen';
@@ -1146,7 +1166,7 @@ function confirmVote() {
 
 // ============================= GUESS =============================
 function showGuess() {
-  setHeader(false);
+  setHeader(true, helpBtn());
   const impName = G.players[G.votedPlayer];
   document.getElementById('guess-sub').innerHTML =
     `<strong>${impName}</strong>, תפסו אותך!<br>נחש את המילה הסודית — ונצח!`;
@@ -1171,10 +1191,10 @@ function submitGuess(btn) {
 
 // ============================= RESULT =============================
 function showResult(imposterWon, guessAttempted) {
-  setHeader(false);
+  setHeader(true, helpBtn());
 
   const screen = document.getElementById('screen-result');
-  screen.className = `screen ${imposterWon ? 'imposter-wins' : 'citizens-win'}`;
+  screen.className = `screen has-header ${imposterWon ? 'imposter-wins' : 'citizens-win'}`;
 
   const crownEl = document.getElementById('result-crown');
   const nameEl  = document.getElementById('result-name');
@@ -1225,6 +1245,7 @@ function showScreen(id) {
 function setHeader(visible, slotHtml = '') {
   document.getElementById('page-header').style.display = visible ? 'flex' : 'none';
   document.getElementById('header-slot').innerHTML = slotHtml;
+  document.getElementById('home-help-btn').style.display = visible ? 'none' : 'flex';
 }
 
 function helpBtn() {
