@@ -26,6 +26,8 @@
     --blue:     #38bdf8;
     --yellow:   #facc15;
     --purple:   #a855f7;
+    --primary:  #FF5733;
+    --primary2: #7D135B;
     --text:     #f1f5f9;
     --text-dim: #94a3b8;
     --border:   #2d2d3d;
@@ -46,7 +48,7 @@
   }
   .page-header-title {
     font-size: 1.05rem; font-weight: 900; letter-spacing: -0.5px;
-    background: linear-gradient(135deg, var(--yellow) 0%, #f97316 60%, #ef4444 100%);
+    background: linear-gradient(90deg, #FF5733 0%, #C02B46 50%, #7D135B 100%);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     border: none; cursor: pointer; padding: 4px 0; font-family: inherit;
   }
@@ -57,7 +59,7 @@
     transition: transform .1s, filter .1s;
   }
   .header-btn:active { transform: scale(.94); filter: brightness(.85); }
-  .header-btn:hover, .header-btn:active { border-color: var(--yellow); }
+  .header-btn:hover, .header-btn:active { border-color: var(--primary); }
 
   /* Icon-only help button that floats top-left on the home screen (no header there) */
   .home-help-btn {
@@ -68,7 +70,7 @@
     transition: filter .1s, border-color .15s, color .15s;
   }
   .home-help-btn:active { filter: brightness(.85); }
-  .home-help-btn:hover, .home-help-btn:active { border-color: var(--yellow); color: var(--yellow); }
+  .home-help-btn:hover, .home-help-btn:active { border-color: var(--primary); color: var(--primary); }
   .home-help-btn iconify-icon { font-size: 1.1rem; width: 1.1rem; height: 1.1rem; }
 
   /* ===== SCREEN SYSTEM ===== */
@@ -89,8 +91,8 @@
     cursor: pointer; transition: transform .12s, filter .12s; letter-spacing: 0.3px;
   }
   .btn:active { transform: scale(.96); filter: brightness(.88); }
-  .btn:hover, .btn:active { outline: 2px solid var(--yellow); outline-offset: 2px; }
-  .btn-primary { background: var(--yellow); color: #0d0d14; }
+  .btn:hover, .btn:active { outline: 2px solid var(--primary); outline-offset: 2px; }
+  .btn-primary { background: var(--primary); color: #1a0a00; }
   .btn-green   { background: var(--green);  color: #fff; }
   .btn-red     { background: var(--red);    color: #fff; }
   .btn-surface { background: var(--surface2); border: 1.5px solid var(--border); color: var(--text); }
@@ -104,7 +106,7 @@
     font-family: 'Heebo', sans-serif; font-size: 1rem; font-weight: 600;
     outline: none; transition: border-color .2s; direction: rtl;
   }
-  input:focus, select:focus { border-color: var(--yellow); }
+  input:focus, select:focus { border-color: var(--primary); }
   select option { background: var(--surface2); }
   select {
     appearance: none; -webkit-appearance: none; -moz-appearance: none;
@@ -116,12 +118,24 @@
   }
 
   /* ===== SCREEN 1: START ===== */
-  #screen-start { padding: 20px 20px 44px; gap: 0; background: var(--bg); }
+  #screen-start { padding: 32px 20px 44px; gap: 0; background: var(--bg); }
+
+  /* ---- Landing screen ---- */
+  #screen-landing {
+    justify-content: center; align-items: center; text-align: center;
+    padding: 32px 28px max(40px, env(safe-area-inset-bottom));
+    background: var(--bg); gap: 0;
+  }
+  .landing-logo { margin-bottom: 28px; }
+  .landing-desc {
+    font-size: .95rem; color: var(--text-dim); line-height: 1.7;
+    width: 100%; margin: 0 auto 40px;
+  }
 
   .logo { text-align: center; margin: 12px 0 24px; }
   .logo-text {
     font-size: 3rem; font-weight: 900; letter-spacing: -2px; line-height: 1;
-    background: linear-gradient(135deg, var(--yellow) 0%, #f97316 50%, #ef4444 100%);
+    background: linear-gradient(90deg, #FF5733 0%, #C02B46 50%, #7D135B 100%);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
   }
   .logo-sub { font-size: .85rem; color: var(--text-dim); letter-spacing: 3px; text-transform: uppercase; margin-top: 5px; }
@@ -136,7 +150,7 @@
     border-radius: var(--radius-sm); padding: 5px 14px;
     position: relative; transition: transform .18s ease, border-color .2s;
   }
-  .player-input-row:focus-within { border-color: var(--yellow); }
+  .player-input-row:focus-within { border-color: var(--primary); }
   .player-num { font-size: .85rem; font-weight: 700; color: var(--text-dim); min-width: 22px; }
   .player-input-row input { background: transparent; border: none; padding: 10px 0; font-size: 1rem; flex: 1; }
   .player-input-row input:focus { border: none; }
@@ -146,11 +160,11 @@
     width: 26px; height: 26px; flex-shrink: 0; color: var(--text-dim);
     cursor: grab; touch-action: none; border-radius: 6px; margin: -5px 0 -5px -10px;
   }
-  .drag-handle:active { cursor: grabbing; color: var(--yellow); }
+  .drag-handle:active { cursor: grabbing; color: var(--primary); }
   .drag-handle iconify-icon { font-size: 1.35rem; width: 1.35rem; height: 1.35rem; }
 
   .player-input-row.dragging {
-    z-index: 30; border-color: var(--yellow); box-shadow: 0 8px 20px rgba(0,0,0,.5);
+    z-index: 30; border-color: var(--primary); box-shadow: 0 8px 20px rgba(0,0,0,.5);
     transition: none; background: var(--surface);
   }
 
@@ -168,7 +182,7 @@
     transition: filter .1s, border-color .15s, color .15s;
   }
   .players-edit-btn:active { filter: brightness(.85); }
-  .players-edit-btn:hover, .players-edit-btn:active { border-color: var(--yellow); }
+  .players-edit-btn:hover, .players-edit-btn:active { border-color: var(--primary); }
   .players-edit-btn iconify-icon:first-child { font-size: 1rem; width: 1rem; height: 1rem; }
   .players-edit-chevron { font-size: .85rem; width: .85rem; height: .85rem; transition: transform .25s ease; }
   .players-edit-chevron.open { transform: rotate(180deg); }
@@ -182,7 +196,7 @@
     cursor: pointer; transition: filter .1s, transform .1s, border-color .15s;
   }
   .player-chip:active { transform: scale(.95); filter: brightness(.85); }
-  .player-chip:hover { border-color: var(--yellow); }
+  .player-chip:hover { border-color: var(--primary); }
   .player-chip .chip-num { color: var(--text-dim); font-weight: 900; font-size: .76rem; flex-shrink: 0; }
   .player-chip .chip-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 160px; }
 
@@ -192,7 +206,7 @@
   }
   .players-edit-content.open { max-height: 280px; margin-top: 12px; overflow-y: auto; padding-left: 2px; }
 
-  .player-input-row.highlight-row { border-color: var(--yellow); box-shadow: 0 0 0 3px rgba(250,204,21,.18); }
+  .player-input-row.highlight-row { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(244,63,94,.18); }
 
   .home-footer {
     width: 100%; display: flex; align-items: center; justify-content: center;
@@ -224,7 +238,7 @@
     border-radius: var(--radius-sm); padding: 13px 16px; margin-bottom: 9px; cursor: pointer;
     transition: border-color .15s;
   }
-  .toggle-row:hover, .toggle-row:active { border-color: var(--yellow); }
+  .toggle-row:hover, .toggle-row:active { border-color: var(--primary); }
   .toggle-label { font-size: .9rem; font-weight: 700; color: var(--text); }
   .toggle-sub   { font-size: .74rem; color: var(--text-dim); margin-top: 2px; font-weight: 600; text-transform: none; letter-spacing: 0; }
   .toggle-switch {
@@ -248,7 +262,7 @@
     font-size: .92rem; font-weight: 700; transition: border-color .15s, outline-color .15s;
   }
   .settings-toggle-header:active { filter: brightness(.9); }
-  .settings-toggle-header:hover, .settings-toggle-header:active { border-color: var(--yellow); }
+  .settings-toggle-header:hover, .settings-toggle-header:active { border-color: var(--primary); }
   .settings-toggle-header span { display: flex; align-items: center; gap: 7px; }
   .settings-chevron { transition: transform .25s ease; font-size: 1.2rem; width: 1.2rem; height: 1.2rem; color: var(--text-dim); }
   .settings-chevron.open { transform: rotate(180deg); }
@@ -269,7 +283,7 @@
   .reveal-progress { width: 100%; display: flex; gap: 5px; margin-bottom: 30px; }
   .reveal-dot { flex: 1; height: 4px; border-radius: 2px; background: var(--surface2); transition: background .3s; }
   .reveal-dot.done    { background: var(--green); }
-  .reveal-dot.current { background: var(--yellow); }
+  .reveal-dot.current { background: var(--primary); }
 
   .reveal-icon-wrap { text-align: center; margin-bottom: 20px; animation: bounce 1.6s ease-in-out infinite; }
   .reveal-icon-wrap.static { animation: none; }
@@ -306,7 +320,7 @@
     border-radius: var(--radius); padding: 16px 18px; margin-bottom: 18px;
   }
   .instruction-box p { font-size: .92rem; line-height: 1.7; }
-  .instruction-box strong { color: var(--yellow); }
+  .instruction-box strong { color: var(--primary); }
 
   .player-list { width: 100%; display: flex; flex-direction: column; gap: 8px; margin-bottom: 22px; }
   .player-row {
@@ -320,7 +334,7 @@
     font-size: .75rem; font-weight: 700; padding: 3px 10px;
     border-radius: 20px; white-space: nowrap;
   }
-  .pr-badge.first { background: rgba(250,204,21,.13); border: 1px solid rgba(250,204,21,.35); color: var(--yellow); }
+  .pr-badge.first { background: rgba(244,63,94,.13); border: 1px solid rgba(244,63,94,.35); color: var(--primary); }
   .pr-badge.order { background: var(--surface2); border: 1px solid var(--border); color: var(--text-dim); }
 
   /* ===== SCREEN 4: VOTE ===== */
@@ -334,7 +348,7 @@
     text-align: right;
   }
   .vote-btn:active { transform: scale(.97); }
-  .vote-btn:not(.selected):hover, .vote-btn:not(.selected):active { border-color: var(--yellow); }
+  .vote-btn:not(.selected):hover, .vote-btn:not(.selected):active { border-color: var(--primary); }
   .vote-btn.selected { border-color: var(--red); background: rgba(239,68,68,.09); }
   .vb-num   { font-size: .82rem; font-weight: 700; color: var(--text-dim); min-width: 18px; }
   .vb-name  { font-size: 1.05rem; font-weight: 700; flex: 1; }
@@ -434,7 +448,7 @@
     background: var(--surface2); border-radius: 12px; padding: 12px 14px; margin-bottom: 8px;
   }
   .ri-text { font-size: .92rem; color: var(--text); line-height: 1.5; }
-  .ri-text strong { color: var(--yellow); }
+  .ri-text strong { color: var(--primary); }
 
   .about-link {
     display: flex; align-items: center; justify-content: space-between;
@@ -442,7 +456,7 @@
     border-radius: 12px; padding: 14px 16px; margin-bottom: 10px;
     text-decoration: none; color: var(--text); transition: border-color .15s;
   }
-  .about-link:hover, .about-link:active { border-color: var(--yellow); }
+  .about-link:hover, .about-link:active { border-color: var(--primary); }
   .about-link-label { font-size: .95rem; font-weight: 700; }
   .about-link-sub   { font-size: .78rem; color: var(--text-dim); margin-top: 2px; }
   .about-tm { text-align: center; font-size: .78rem; color: var(--text-dim); margin-top: 18px; line-height: 1.6; }
@@ -477,11 +491,39 @@
 </button>
 
 <!-- ===== SCREEN 1: START ===== -->
-<div id="screen-start" class="screen active">
-  <div class="logo">
+<!-- ===== SCREEN 0: LANDING ===== -->
+<div id="screen-landing" class="screen active">
+  <div class="landing-logo">
     <div class="logo-text">המתחזה</div>
     <div class="logo-sub">הסוד · השקר · הניצחון</div>
   </div>
+
+  <div class="landing-desc">
+    אחד מכם מתחזה לאזרח תמים.<br>
+    האזרחים מנסים לחשוף אותו — מי ינחש? מי ינצח?
+  </div>
+
+  <div style="width:100%">
+    <button type="button" class="btn btn-primary" onclick="goToSettings()">
+      <iconify-icon icon="mdi:play-circle-outline"></iconify-icon> התחילו משחק!
+    </button>
+  </div>
+
+  <div class="home-footer">
+    <button class="footer-link" onclick="openInfo('rules')">
+      <iconify-icon icon="mdi:help-circle-outline"></iconify-icon> איך משחקים
+    </button>
+    <span class="footer-sep">·</span>
+    <button class="footer-link" onclick="openInfo('about')">
+      <iconify-icon icon="mdi:information-outline"></iconify-icon> אודות
+    </button>
+  </div>
+</div>
+
+<!-- ===== SCREEN 1: SETTINGS ===== -->
+<div id="screen-start" class="screen has-header">
+
+  <div style="height:20px"></div>
 
   <div class="form-section" style="margin-bottom:12px">
     <label><iconify-icon icon="mdi:account-group-outline" style="font-size:.82rem;width:.82rem;height:.82rem"></iconify-icon> מספר שחקנים</label>
@@ -562,19 +604,10 @@
 
   <div style="width:100%">
     <button type="button" class="btn btn-primary" onclick="startGame()">
-      <iconify-icon icon="mdi:spy"></iconify-icon> התחל משחק!
+      <iconify-icon icon="mdi:spy"></iconify-icon> יאללה, משחקים!
     </button>
   </div>
 
-  <div class="home-footer">
-    <button class="footer-link" onclick="openInfo('rules')">
-      <iconify-icon icon="mdi:help-circle-outline"></iconify-icon> איך משחקים
-    </button>
-    <span class="footer-sep">·</span>
-    <button class="footer-link" onclick="openInfo('about')">
-      <iconify-icon icon="mdi:information-outline"></iconify-icon> אודות
-    </button>
-  </div>
 </div>
 
 <!-- ===== SCREEN 2: REVEAL (pass & play) ===== -->
@@ -1226,15 +1259,23 @@ function showResult(imposterWon, guessAttempted) {
 }
 
 // ============================= NAV HELPERS =============================
+function goToSettings() {
+  setHeader(true,
+    `<button class="header-btn" onclick="openInfo('rules')">
+      <iconify-icon icon="mdi:help-circle-outline"></iconify-icon> כללים</button>`
+  );
+  showScreen('screen-start');
+}
+
 function goHome() {
   if (!confirm('לחזור לדף הבית? המשחק הנוכחי יאופס.')) return;
   setHeader(false);
-  showScreen('screen-start');
+  showScreen('screen-landing');
 }
 
 function newGame() {
   setHeader(false);
-  showScreen('screen-start');
+  showScreen('screen-landing');
 }
 
 function showScreen(id) {
