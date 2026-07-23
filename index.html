@@ -876,7 +876,7 @@ function updatePlayerChips() {
     const chip  = document.createElement('div');
     chip.className = 'player-chip';
     chip.onclick = () => focusPlayerEdit(i);
-    chip.innerHTML = `<span class="chip-num">${i + 1}</span><span class="chip-name">${val || `שחקן ${i + 1}`}</span>`;
+    chip.innerHTML = `<span class="chip-num">${i + 1}</span><span class="chip-name">${escapeHtml(val) || `שחקן ${i + 1}`}</span>`;
     chipsEl.appendChild(chip);
   }
 }
@@ -1159,7 +1159,7 @@ function showDiscussion() {
   document.getElementById('discussion-list').innerHTML = order.map((pi, pos) => `
     <div class="player-row">
       <span class="pr-num">${pos + 1}</span>
-      <span class="pr-name">${G.players[pi]}</span>
+      <span class="pr-name">${escapeHtml(G.players[pi])}</span>
       <span class="pr-badge ${pos === 0 ? 'first' : 'order'}">${pos === 0 ? 'מתחיל! 🎙️' : `#${pos + 1}`}</span>
     </div>`).join('');
 
@@ -1174,7 +1174,7 @@ function showVote() {
   document.getElementById('vote-list').innerHTML = G.players.map((name, i) => `
     <button class="vote-btn" id="vbtn-${i}" onclick="selectVote(${i})">
       <span class="vb-num">${i + 1}</span>
-      <span class="vb-name">${name}</span>
+      <span class="vb-name">${escapeHtml(name)}</span>
       <iconify-icon icon="mdi:close-circle-outline" class="vb-icon"></iconify-icon>
     </button>`).join('');
 
