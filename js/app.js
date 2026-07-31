@@ -675,7 +675,7 @@ const INFO_CONTENT = {
     </div>
     <div class="rules-section">
       <h3><iconify-icon icon="mdi:view-grid-outline"></iconify-icon> לכל המשחקים</h3>
-      <a class="about-link" href="https://loteman.github.io/Loteman-Games/#games" target="_blank" rel="noopener">
+      <a class="about-link" href="https://loteman.github.io/Loteman-Games/games.html" target="_blank" rel="noopener">
         <div>
           <div class="about-link-label"><iconify-icon icon="mdi:gamepad-variant-outline"></iconify-icon> כל המשחקים</div>
           <div class="about-link-sub">לרשימה המלאה — לחץ לביקור באתר</div>
