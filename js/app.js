@@ -655,19 +655,19 @@ const INFO_CONTENT = {
     <div class="rules-section">
       <h3><iconify-icon icon="mdi:star-outline"></iconify-icon> משחקים נבחרים</h3>
       <div class="game-tiles">
-        <a class="game-tile tile-imposter" href="https://loteman.github.io/Imposter/" target="_blank" rel="noopener">
+        <a class="game-tile tile-imposter" href="https://imposter.loteman.com/" target="_blank" rel="noopener">
           <span class="tile-emoji">🕵️</span>
           <span class="tile-name">המתחזה</span>
         </a>
-        <a class="game-tile tile-alias" href="https://loteman.github.io/GuessWord/" target="_blank" rel="noopener">
+        <a class="game-tile tile-alias" href="https://guessword.loteman.com/" target="_blank" rel="noopener">
           <span class="tile-emoji">🗣️</span>
           <span class="tile-name">נחש ת׳מילה</span>
         </a>
-        <a class="game-tile tile-category" href="https://loteman.github.io/Categorys/" target="_blank" rel="noopener">
+        <a class="game-tile tile-category" href="https://categories.loteman.com/" target="_blank" rel="noopener">
           <span class="tile-emoji">🏷️</span>
           <span class="tile-name">מה בקטגוריה?</span>
         </a>
-        <a class="game-tile tile-hirtotim" href="https://loteman.github.io/Opposites/" target="_blank" rel="noopener">
+        <a class="game-tile tile-hirtotim" href="https://opposites.loteman.com/" target="_blank" rel="noopener">
           <span class="tile-emoji">🤥</span>
           <span class="tile-name">חירטוטים</span>
         </a>
@@ -675,7 +675,7 @@ const INFO_CONTENT = {
     </div>
     <div class="rules-section">
       <h3><iconify-icon icon="mdi:view-grid-outline"></iconify-icon> לכל המשחקים</h3>
-      <a class="about-link" href="https://loteman.github.io/Loteman-Games/games.html" target="_blank" rel="noopener">
+      <a class="about-link" href="https://games.loteman.com/games" target="_blank" rel="noopener">
         <div>
           <div class="about-link-label"><iconify-icon icon="mdi:gamepad-variant-outline"></iconify-icon> כל המשחקים</div>
           <div class="about-link-sub">לרשימה המלאה — לחץ לביקור באתר</div>
@@ -685,7 +685,7 @@ const INFO_CONTENT = {
     </div>
     <div class="rules-section">
       <h3><iconify-icon icon="mdi:information-outline"></iconify-icon> אודות</h3>
-      <a class="about-link" href="https://loteman.github.io/Loteman-Games/" target="_blank" rel="noopener">
+      <a class="about-link" href="https://games.loteman.com/" target="_blank" rel="noopener">
         <div>
           <div class="about-link-label"><iconify-icon icon="mdi:gamepad-variant-outline"></iconify-icon> Loteman Games</div>
           <div class="about-link-sub">למשחקים נוספים — לחץ לביקור באתר</div>
