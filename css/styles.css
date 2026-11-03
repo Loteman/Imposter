@@ -50,7 +50,8 @@ iconify-icon { display: inline-flex; vertical-align: middle; flex-shrink: 0; }
     transition: transform .1s, filter .1s;
   }
   .header-btn:active { transform: scale(.94); filter: brightness(.85); }
-  .header-btn:hover, .header-btn:active { border-color: var(--accent); }
+  .header-btn:active { border-color: var(--accent); }
+  @media (hover: hover) { .header-btn:hover { border-color: var(--accent); } }
 
   /* Icon-only help button that floats top-left on the home screen (no header there) */
   .home-help-btn {
@@ -61,7 +62,8 @@ iconify-icon { display: inline-flex; vertical-align: middle; flex-shrink: 0; }
     transition: filter .1s, border-color .15s, color .15s;
   }
   .home-help-btn:active { filter: brightness(.85); }
-  .home-help-btn:hover, .home-help-btn:active { border-color: var(--accent); color: var(--accent); }
+  .home-help-btn:active { border-color: var(--accent); color: var(--accent); }
+  @media (hover: hover) { .home-help-btn:hover { border-color: var(--accent); color: var(--accent); } }
   .home-help-btn iconify-icon { font-size: 1.1rem; width: 1.1rem; height: 1.1rem; }
 
   /* ===== SCREEN SYSTEM ===== */
@@ -82,7 +84,8 @@ iconify-icon { display: inline-flex; vertical-align: middle; flex-shrink: 0; }
     cursor: pointer; transition: transform .12s, filter .12s; letter-spacing: 0.3px;
   }
   .btn:active { transform: scale(.96); filter: brightness(.88); }
-  .btn:hover, .btn:active { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .btn:active { outline: 2px solid var(--accent); outline-offset: 2px; }
+  @media (hover: hover) { .btn:hover { outline: 2px solid var(--accent); outline-offset: 2px; } }
   .btn-primary { background: var(--accent); color: #1a0a00; }
   .btn-green   { background: var(--green);  color: #fff; }
   .btn-red     { background: var(--red);    color: #fff; }
@@ -113,7 +116,7 @@ iconify-icon { display: inline-flex; vertical-align: middle; flex-shrink: 0; }
 
   /* ---- Landing screen ---- */
   #screen-home {
-    justify-content: center; align-items: center; text-align: center;
+    justify-content: flex-start; align-items: center; text-align: center;
     padding: 32px 28px max(40px, env(safe-area-inset-bottom));
     background: var(--bg); gap: 0;
   }
@@ -173,7 +176,8 @@ iconify-icon { display: inline-flex; vertical-align: middle; flex-shrink: 0; }
     transition: filter .1s, border-color .15s, color .15s;
   }
   .players-edit-btn:active { filter: brightness(.85); }
-  .players-edit-btn:hover, .players-edit-btn:active { border-color: var(--accent); }
+  .players-edit-btn:active { border-color: var(--accent); }
+  @media (hover: hover) { .players-edit-btn:hover { border-color: var(--accent); } }
   .players-edit-btn iconify-icon:first-child { font-size: 1rem; width: 1rem; height: 1rem; }
   .players-edit-chevron { font-size: .85rem; width: .85rem; height: .85rem; transition: transform .25s ease; }
   .players-edit-chevron.open { transform: rotate(180deg); }
@@ -187,7 +191,7 @@ iconify-icon { display: inline-flex; vertical-align: middle; flex-shrink: 0; }
     cursor: pointer; transition: filter .1s, transform .1s, border-color .15s;
   }
   .player-chip:active { transform: scale(.95); filter: brightness(.85); }
-  .player-chip:hover { border-color: var(--accent); }
+  @media (hover: hover) { .player-chip:hover { border-color: var(--accent); } }
   .player-chip .chip-num { color: var(--text-dim); font-weight: 900; font-size: .76rem; flex-shrink: 0; }
   .player-chip .chip-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 160px; }
 
@@ -210,7 +214,8 @@ iconify-icon { display: inline-flex; vertical-align: middle; flex-shrink: 0; }
     transition: color .15s, background .15s; letter-spacing: .2px;
     display: flex; align-items: center; gap: 5px;
   }
-  .footer-link:active, .footer-link:hover { color: var(--text); background: var(--surface2); }
+  .footer-link:active { color: var(--text); background: var(--surface2); }
+  @media (hover: hover) { .footer-link:hover { color: var(--text); background: var(--surface2); } }
   .footer-sep { color: var(--border); font-size: .9rem; user-select: none; }
 
   /* ---- Game settings: numeric box ---- */
@@ -229,7 +234,8 @@ iconify-icon { display: inline-flex; vertical-align: middle; flex-shrink: 0; }
     border-radius: var(--radius-sm); padding: 13px 16px; margin-bottom: 9px; cursor: pointer;
     transition: border-color .15s;
   }
-  .toggle-row:hover, .toggle-row:active { border-color: var(--accent); }
+  .toggle-row:active { border-color: var(--accent); }
+  @media (hover: hover) { .toggle-row:hover { border-color: var(--accent); } }
   .toggle-label { font-size: .9rem; font-weight: 700; color: var(--text); }
   .toggle-sub   { font-size: .74rem; color: var(--text-dim); margin-top: 2px; font-weight: 600; text-transform: none; letter-spacing: 0; }
   .toggle-switch {
@@ -253,7 +259,8 @@ iconify-icon { display: inline-flex; vertical-align: middle; flex-shrink: 0; }
     font-size: .92rem; font-weight: 700; transition: border-color .15s, outline-color .15s;
   }
   .settings-toggle-header:active { filter: brightness(.9); }
-  .settings-toggle-header:hover, .settings-toggle-header:active { border-color: var(--accent); }
+  .settings-toggle-header:active { border-color: var(--accent); }
+  @media (hover: hover) { .settings-toggle-header:hover { border-color: var(--accent); } }
   .settings-toggle-header span { display: flex; align-items: center; gap: 7px; }
   .settings-chevron { transition: transform .25s ease; font-size: 1.2rem; width: 1.2rem; height: 1.2rem; color: var(--text-dim); }
   .settings-chevron.open { transform: rotate(180deg); }
@@ -266,7 +273,7 @@ iconify-icon { display: inline-flex; vertical-align: middle; flex-shrink: 0; }
 
   /* ===== SCREEN 2: REVEAL ===== */
   #screen-reveal {
-    justify-content: center; padding: 24px 24px max(28px, env(safe-area-inset-bottom));
+    justify-content: flex-start; padding: 24px 24px max(28px, env(safe-area-inset-bottom));
     background: radial-gradient(ellipse at 50% 30%, #1a1a2e 0%, var(--bg) 70%);
     gap: 0;
   }
@@ -339,7 +346,8 @@ iconify-icon { display: inline-flex; vertical-align: middle; flex-shrink: 0; }
     text-align: right;
   }
   .vote-btn:active { transform: scale(.97); }
-  .vote-btn:not(.selected):hover, .vote-btn:not(.selected):active { border-color: var(--accent); }
+  .vote-btn:not(.selected):active { border-color: var(--accent); }
+  @media (hover: hover) { .vote-btn:not(.selected):hover { border-color: var(--accent); } }
   .vote-btn.selected { border-color: var(--red); background: rgba(239,68,68,.09); }
   .vb-num   { font-size: .82rem; font-weight: 700; color: var(--text-dim); min-width: 18px; }
   .vb-name  { font-size: 1.05rem; font-weight: 700; flex: 1; }
@@ -350,7 +358,7 @@ iconify-icon { display: inline-flex; vertical-align: middle; flex-shrink: 0; }
 
   /* ===== SCREEN 5: GUESS ===== */
   #screen-guess {
-    justify-content: center; padding: 28px 22px max(28px, env(safe-area-inset-bottom));
+    justify-content: flex-start; padding: 28px 22px max(28px, env(safe-area-inset-bottom));
     background: radial-gradient(ellipse at 50% 30%, #200a0a 0%, var(--bg) 70%);
     gap: 0;
   }
@@ -369,11 +377,11 @@ iconify-icon { display: inline-flex; vertical-align: middle; flex-shrink: 0; }
     color: var(--text); cursor: pointer; transition: all .15s; text-align: center;
   }
   .guess-choice:active { transform: scale(.97); filter: brightness(.9); }
-  .guess-choice:hover  { border-color: rgba(239,68,68,.6); background: rgba(239,68,68,.06); }
+  @media (hover: hover) { .guess-choice:hover { border-color: rgba(239,68,68,.6); background: rgba(239,68,68,.06); } }
 
   /* ===== SCREEN 6: RESULT ===== */
   #screen-result {
-    justify-content: center; align-items: center;
+    justify-content: flex-start; align-items: center;
     padding: 28px 20px 52px; gap: 0; text-align: center;
   }
   #screen-result.imposter-wins { background: radial-gradient(ellipse at 50% 40%, #20080a 0%, var(--bg) 65%); }
@@ -447,7 +455,8 @@ iconify-icon { display: inline-flex; vertical-align: middle; flex-shrink: 0; }
     border-radius: 12px; padding: 14px 16px; margin-bottom: 10px;
     text-decoration: none; color: var(--text); transition: border-color .15s;
   }
-  .about-link:hover, .about-link:active { border-color: var(--accent); }
+  .about-link:active { border-color: var(--accent); }
+  @media (hover: hover) { .about-link:hover { border-color: var(--accent); } }
   .about-link-label { font-size: .95rem; font-weight: 700; }
   .about-link-sub   { font-size: .78rem; color: var(--text-dim); margin-top: 2px; }
   .about-tm { text-align: center; font-size: .78rem; color: var(--text-dim); margin-top: 18px; line-height: 1.6; }
@@ -464,10 +473,21 @@ iconify-icon { display: inline-flex; vertical-align: middle; flex-shrink: 0; }
     transition: transform .12s, border-color .15s, filter .12s;
   }
   .game-tile:active { transform: scale(.96); filter: brightness(.9); }
-  .game-tile:hover, .game-tile:active { border-color: var(--text-dim); }
+  .game-tile:active { border-color: var(--text-dim); }
+  @media (hover: hover) { .game-tile:hover { border-color: var(--text-dim); } }
   .tile-emoji { font-size: 1.8rem; line-height: 1; }
   .tile-name { font-size: .85rem; font-weight: 900; text-align: center; }
   .tile-imposter .tile-name  { background: linear-gradient(90deg, #FF5733 0%, #C02B46 50%, #7D135B 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
   .tile-alias .tile-name     { background: linear-gradient(135deg, #facc15 0%, #f97316 50%, #ef4444 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
   .tile-category .tile-name  { background: linear-gradient(135deg, #a855f7 0%, #6366f1 50%, #22d3ee 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
   .tile-hirtotim .tile-name  { background: linear-gradient(135deg, #14b8a6 0%, #0ea5e9 55%, #6366f1 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+  /* ===== VERTICALLY CENTERED SCREENS =====
+     Spacers instead of justify-content:center, so content taller than the
+     viewport starts at the top and stays scrollable instead of being clipped. */
+  #screen-home::before, #screen-home::after,
+  #screen-reveal::before, #screen-reveal::after,
+  #screen-guess::before, #screen-guess::after,
+  #screen-result::before, #screen-result::after {
+    content: ''; flex: 1 0 0;
+  }

@@ -117,8 +117,9 @@ document.addEventListener('DOMContentLoaded', onNumPlayersChange);
 
 function onNumPlayersChange() {
   const n = parseInt(document.getElementById('num-players').value);
+  const prev = Array.from(document.querySelectorAll('#player-inputs input')).map(i => i.value);
   G.numPlayers = n;
-  rebuildPlayerRows(new Array(n).fill(''));
+  rebuildPlayerRows(Array.from({ length: n }, (_, i) => prev[i] || ''));
 
   // Changing player count resets the game settings to their defaults,
   // since imposter count / hint / order rules depend on player count.
@@ -490,7 +491,7 @@ function showGuess() {
   setHeader(true, helpBtn());
   const impName = G.players[G.votedPlayer];
   document.getElementById('guess-sub').innerHTML =
-    `<strong>${impName}</strong>, תפסו אותך!<br>נחש את המילה הסודית — ונצח!`;
+    `<strong>${escapeHtml(impName)}</strong>, תפסו אותך!<br>נחש את המילה הסודית — ונצח!`;
 
   // 4 choices: real word + 3 distractors from the same category
   const pool     = CATEGORIES[G.category].filter(w => w !== G.secretWord);
@@ -498,8 +499,8 @@ function showGuess() {
   const choices  = shuffle([G.secretWord, ...shuffled]);
 
   document.getElementById('guess-choices').innerHTML = choices.map(w => `
-    <button class="guess-choice" data-word="${w}" onclick="submitGuess(this)">
-      ${w}
+    <button class="guess-choice" data-word="${escapeHtml(w)}" onclick="submitGuess(this)">
+      ${escapeHtml(w)}
     </button>`).join('');
 
   showScreen('screen-guess');
@@ -528,7 +529,7 @@ function showResult(imposterWon, guessAttempted) {
     } else {
       const wrongName = G.players[G.votedPlayer];
       nameEl.innerHTML = `<span style="color:var(--red)">${multi ? 'המתחזים ניצחו!' : 'המתחזה ניצח!'}</span>
-        <div style="font-size:1.1rem;color:var(--text-dim);margin-top:6px;font-weight:700">הצבעתם על ${wrongName} — אזרח תמים 😅</div>`;
+        <div style="font-size:1.1rem;color:var(--text-dim);margin-top:6px;font-weight:700">הצבעתם על ${escapeHtml(wrongName)} — אזרח תמים 😅</div>`;
     }
     vibrate([500]);
   } else {
@@ -556,7 +557,8 @@ function goToSettings() {
 }
 
 function goHome() {
-  if (!confirm('לחזור לדף הבית? המשחק הנוכחי יאופס.')) return;
+  const cur = document.querySelector('.screen.active');
+  if (!(cur && cur.id === 'screen-result') && !confirm('לחזור לדף הבית? המשחק הנוכחי יאופס.')) return;
   setHeader(false);
   showScreen('screen-home');
 }
@@ -568,7 +570,9 @@ function newGame() {
 
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+  const el = document.getElementById(id);
+  el.classList.add('active');
+  el.scrollTop = 0;
 }
 
 function setHeader(visible, slotHtml = '') {
@@ -709,6 +713,7 @@ function openInfo(type) {
   }
 }
 function switchInfoTab(type) { openInfo(type); }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeInfo(); });
 function closeInfo() {
   document.getElementById('info-backdrop').classList.remove('open');
   document.getElementById('info-sheet').classList.remove('open');
